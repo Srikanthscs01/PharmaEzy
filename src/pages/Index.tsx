@@ -38,13 +38,13 @@ const Index = () => {
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Home" isActive={true}>
+                    <SidebarMenuButton tooltip="Home" isActive={true} href="/">
                       <Home size={18} />
                       <span>Home</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Products">
+                    <SidebarMenuButton tooltip="Products" href="/products">
                       <Package size={18} />
                       <span>Products</span>
                     </SidebarMenuButton>
