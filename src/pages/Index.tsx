@@ -4,6 +4,7 @@ import ProductSearch from '@/components/ProductSearch';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import { MoveUpRight, Settings, Home, Package, ListChecks, BarChart3, Users, Tablets, Pill } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import { 
   SidebarProvider, 
   Sidebar, 
@@ -38,15 +39,19 @@ const Index = () => {
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Home" isActive={true} href="/">
-                      <Home size={18} />
-                      <span>Home</span>
+                    <SidebarMenuButton tooltip="Home" isActive={true} asChild>
+                      <Link to="/">
+                        <Home size={18} />
+                        <span>Home</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Products" href="/products">
-                      <Package size={18} />
-                      <span>Products</span>
+                    <SidebarMenuButton tooltip="Products" asChild>
+                      <Link to="/products">
+                        <Package size={18} />
+                        <span>Products</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>

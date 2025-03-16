@@ -21,8 +21,15 @@ import {
   Plus, 
   Package, 
   Trash2,
-  ArrowRightCircle
+  ArrowRightCircle,
+  Settings,
+  Home,
+  ListChecks,
+  BarChart3,
+  Users,
+  Tablets
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { 
   SidebarProvider, 
   Sidebar, 
@@ -160,15 +167,19 @@ const Products = () => {
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Home" href="/">
-                      <Home size={18} />
-                      <span>Home</span>
+                    <SidebarMenuButton tooltip="Home" asChild>
+                      <Link to="/">
+                        <Home size={18} />
+                        <span>Home</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Products" isActive={true} href="/products">
-                      <Package size={18} />
-                      <span>Products</span>
+                    <SidebarMenuButton tooltip="Products" isActive={true} asChild>
+                      <Link to="/products">
+                        <Package size={18} />
+                        <span>Products</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
