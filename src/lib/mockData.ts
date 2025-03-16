@@ -64,7 +64,6 @@ const products: Product[] = [
         schAmt: 0.0000,
         disPct: 10.00,
         gstPct: 12.00,
-        billPrice: 30.64,
         specialPrice: 30.64,
         stockistPrice: 0.00,
         costPrice: 27.579,

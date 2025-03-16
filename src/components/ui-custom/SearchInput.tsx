@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SearchInputProps {
@@ -10,6 +10,7 @@ interface SearchInputProps {
   onSubmit?: () => void;
   className?: string;
   autoFocus?: boolean;
+  isLoading?: boolean;
 }
 
 const SearchInput = ({
@@ -19,6 +20,7 @@ const SearchInput = ({
   onSubmit,
   className,
   autoFocus = false,
+  isLoading = false,
 }: SearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,8 +50,12 @@ const SearchInput = ({
         className
       )}
     >
-      <div className="absolute left-3 text-muted-foreground">
-        <Search size={18} className={cn('transition-all', isFocused ? 'text-primary' : '')} />
+      <div className="absolute left-3.5 text-muted-foreground">
+        {isLoading ? (
+          <Loader2 size={18} className="animate-spin text-primary" />
+        ) : (
+          <Search size={18} className={cn('transition-all', isFocused ? 'text-primary' : '')} />
+        )}
       </div>
       
       <input
@@ -62,13 +68,13 @@ const SearchInput = ({
         onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
         className={cn(
-          'w-full h-11 pl-10 pr-10 rounded-xl text-sm',
-          'bg-white dark:bg-gray-800/50',
+          'w-full h-12 pl-11 pr-10 rounded-xl text-sm',
+          'bg-white dark:bg-gray-800/60',
           'border border-border',
           'focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50',
           'transition-all duration-200 ease-in-out',
           'placeholder:text-muted-foreground/70',
-          isFocused ? 'shadow-md shadow-primary/5' : '',
+          isFocused ? 'shadow-lg shadow-primary/5' : 'shadow-md',
           className
         )}
       />
@@ -76,7 +82,7 @@ const SearchInput = ({
       {value && (
         <button
           onClick={clearSearch}
-          className="absolute right-3 text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute right-3.5 text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Clear search"
         >
           <X size={16} />

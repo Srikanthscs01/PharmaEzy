@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { ProductBatch } from '@/lib/mockData';
 import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Calendar, DollarSign } from 'lucide-react';
 
 interface ProductBatchTableProps {
   batches: ProductBatch[];
@@ -24,22 +24,31 @@ const ProductBatchTable = ({ batches, onSelectBatch, selectedBatchNo }: ProductB
   }, [batches]);
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-border bg-white/50 backdrop-blur-sm dark:bg-gray-900/40 shadow-sm">
+    <div className="w-full overflow-hidden rounded-xl border border-border bg-white/60 backdrop-blur-sm dark:bg-gray-900/50 shadow-lg">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-border bg-secondary/50 dark:bg-gray-800/50">
+            <tr className="border-b border-border bg-secondary/70 dark:bg-gray-800/70">
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Batch No
               </th>
               <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Bill Price
+                <span className="flex items-center justify-end gap-1">
+                  <DollarSign size={12} />
+                  Bill Price
+                </span>
               </th>
               <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                M.R.P
+                <span className="flex items-center justify-end gap-1">
+                  <DollarSign size={12} />
+                  M.R.P
+                </span>
               </th>
               <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Expiry
+                <span className="flex items-center justify-center gap-1">
+                  <Calendar size={12} />
+                  Expiry
+                </span>
               </th>
               <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Qty
@@ -51,10 +60,16 @@ const ProductBatchTable = ({ batches, onSelectBatch, selectedBatchNo }: ProductB
                 Pur.No
               </th>
               <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Pur.Date
+                <span className="flex items-center justify-center gap-1">
+                  <Calendar size={12} />
+                  Pur.Date
+                </span>
               </th>
               <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Rcvd.Date
+                <span className="flex items-center justify-center gap-1">
+                  <Calendar size={12} />
+                  Rcvd.Date
+                </span>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 From
@@ -76,35 +91,43 @@ const ProductBatchTable = ({ batches, onSelectBatch, selectedBatchNo }: ProductB
                 </tr>
               ))
             ) : animatedBatches.length > 0 ? (
-              animatedBatches.map((batch, index) => (
-                <tr 
-                  key={batch.batchNo}
-                  onClick={() => onSelectBatch(batch)}
-                  className={cn(
-                    "fade-up transition-colors cursor-pointer hover:bg-primary/5",
-                    selectedBatchNo === batch.batchNo ? "bg-primary/10 hover:bg-primary/15" : "",
-                    index % 2 === 0 ? "bg-white/30 dark:bg-gray-800/20" : "bg-white/10 dark:bg-transparent"
-                  )}
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <td className="px-4 py-3 text-sm font-medium">{batch.batchNo}</td>
-                  <td className="px-4 py-3 text-sm text-right font-mono">{batch.billPrice.toFixed(2)}</td>
-                  <td className="px-4 py-3 text-sm text-right font-mono">{batch.mrp.toFixed(2)}</td>
-                  <td className="px-4 py-3 text-sm text-center">{batch.expiry}</td>
-                  <td className="px-4 py-3 text-sm text-right font-mono">{batch.qty.toFixed(1)}</td>
-                  <td className="px-4 py-3 text-sm text-right font-mono">{batch.qit.toFixed(1)}</td>
-                  <td className="px-4 py-3 text-sm">{batch.purNo}</td>
-                  <td className="px-4 py-3 text-sm text-center">{batch.purDate}</td>
-                  <td className="px-4 py-3 text-sm text-center">{batch.rcvdDate}</td>
-                  <td className="px-4 py-3 text-sm">{batch.from}</td>
-                  <td className="w-10 px-2">
-                    <ChevronRight size={16} className={cn(
-                      "text-muted-foreground transition-transform duration-200",
-                      selectedBatchNo === batch.batchNo ? "text-primary transform rotate-90" : ""
-                    )} />
-                  </td>
-                </tr>
-              ))
+              animatedBatches.map((batch, index) => {
+                const isExpired = new Date(batch.expiry.split('/').reverse().join('-')) < new Date();
+                return (
+                  <tr 
+                    key={batch.batchNo}
+                    onClick={() => onSelectBatch(batch)}
+                    className={cn(
+                      "fade-up transition-colors cursor-pointer hover:bg-primary/5",
+                      selectedBatchNo === batch.batchNo ? "bg-primary/10 hover:bg-primary/15" : "",
+                      index % 2 === 0 ? "bg-white/40 dark:bg-gray-800/30" : "bg-white/20 dark:bg-transparent"
+                    )}
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    <td className="px-4 py-3 text-sm font-medium">{batch.batchNo}</td>
+                    <td className="px-4 py-3 text-sm text-right font-mono">{batch.billPrice.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-sm text-right font-mono">{batch.mrp.toFixed(2)}</td>
+                    <td className={cn(
+                      "px-4 py-3 text-sm text-center",
+                      isExpired ? "text-destructive font-medium" : ""
+                    )}>
+                      {batch.expiry}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-right font-mono">{batch.qty.toFixed(1)}</td>
+                    <td className="px-4 py-3 text-sm text-right font-mono">{batch.qit.toFixed(1)}</td>
+                    <td className="px-4 py-3 text-sm">{batch.purNo}</td>
+                    <td className="px-4 py-3 text-sm text-center">{batch.purDate}</td>
+                    <td className="px-4 py-3 text-sm text-center">{batch.rcvdDate}</td>
+                    <td className="px-4 py-3 text-sm">{batch.from}</td>
+                    <td className="w-10 px-2">
+                      <ChevronRight size={16} className={cn(
+                        "text-muted-foreground transition-transform duration-200",
+                        selectedBatchNo === batch.batchNo ? "text-primary transform rotate-90" : ""
+                      )} />
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan={11} className="px-4 py-8 text-center text-muted-foreground">

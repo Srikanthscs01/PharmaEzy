@@ -1,10 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { searchProducts, getProductByCode, Product, ProductBatch } from '@/lib/mockData';
 import SearchInput from './ui-custom/SearchInput';
 import ProductBatchTable from './ProductBatchTable';
 import ProductBatchDetail from './ProductBatchDetail';
 import { cn } from '@/lib/utils';
-import { Package, Search, ArrowRight } from 'lucide-react';
+import { Package, Search, ArrowRight, FileText, Clock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -16,6 +17,7 @@ const ProductSearch = () => {
   const [selectedBatch, setSelectedBatch] = useState<ProductBatch | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [showResultsList, setShowResultsList] = useState(false);
+  const [recentSearches] = useState<string[]>(['006161', '007250', '008943']);
   const { toast } = useToast();
 
   // Handle debounced search
@@ -48,7 +50,7 @@ const ProductSearch = () => {
 
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product);
-    setSelectedBatch(null);
+    setSelectedBatch(product.batches.length > 0 ? product.batches[0] : null);
     setShowResultsList(false);
     setSearchQuery(product.code + ' - ' + product.name);
     
@@ -104,22 +106,23 @@ const ProductSearch = () => {
               onChange={setSearchQuery}
               onSubmit={handleSearchSubmit}
               autoFocus
-              className="shadow-md"
+              isLoading={isSearching}
+              className="shadow-lg"
             />
             
             {/* Search Results Dropdown */}
             {showResultsList && searchResults.length > 0 && (
-              <div className="absolute z-20 mt-2 w-full rounded-xl border border-border bg-white/90 backdrop-blur-md shadow-lg dark:bg-gray-800/90 overflow-hidden transition-all duration-300 scale-in">
+              <div className="absolute z-20 mt-2 w-full rounded-xl border border-border bg-white/90 backdrop-blur-md shadow-xl dark:bg-gray-800/90 overflow-hidden transition-all duration-300 scale-in">
                 <div className="p-2">
                   <div className="text-xs font-medium text-muted-foreground p-2">
-                    Products
+                    Products ({searchResults.length})
                   </div>
                   <div className="max-h-64 overflow-y-auto">
                     {searchResults.map((product, index) => (
                       <button
                         key={product.code}
                         className={cn(
-                          "w-full text-left px-3 py-2 rounded-lg flex items-center gap-2",
+                          "w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2",
                           "transition-colors hover:bg-primary/10 focus:bg-primary/10 focus:outline-none",
                           "fade-up"
                         )}
@@ -129,7 +132,7 @@ const ProductSearch = () => {
                         <Package size={16} className="text-primary shrink-0" />
                         <div className="flex-1">
                           <div className="text-sm font-medium">{product.name}</div>
-                          <div className="text-xs text-muted-foreground">Code: {product.code}</div>
+                          <div className="text-xs text-muted-foreground">Code: {product.code} • Qty: {product.totalQty}</div>
                         </div>
                         <ArrowRight size={14} className="text-muted-foreground" />
                       </button>
@@ -140,7 +143,7 @@ const ProductSearch = () => {
             )}
             
             {showResultsList && searchResults.length === 0 && !isSearching && (
-              <div className="absolute z-20 mt-2 w-full rounded-xl border border-border bg-white/90 backdrop-blur-md shadow-lg dark:bg-gray-800/90 overflow-hidden">
+              <div className="absolute z-20 mt-2 w-full rounded-xl border border-border bg-white/90 backdrop-blur-md shadow-xl dark:bg-gray-800/90 overflow-hidden">
                 <div className="p-6 text-center">
                   <Search className="mx-auto mb-2 text-muted-foreground" size={20} />
                   <div className="text-sm text-muted-foreground">
@@ -163,16 +166,18 @@ const ProductSearch = () => {
                   <span className="teal-gradient inline-block w-3 h-5 mr-2 rounded-sm"></span>
                   {selectedProduct.name}
                 </h2>
-                <div className="flex items-center gap-6">
-                  <span className="text-sm text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-4 text-sm">
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <FileText size={14} />
                     Code: <span className="font-medium text-foreground">{selectedProduct.code}</span>
                   </span>
                   {selectedProduct.rack && (
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-muted-foreground">
                       Rack: <span className="font-medium text-foreground">{selectedProduct.rack}</span>
                     </span>
                   )}
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <Package size={14} />
                     Total Qty: <span className="font-medium text-foreground">{selectedProduct.totalQty}</span>
                   </span>
                 </div>
@@ -180,7 +185,7 @@ const ProductSearch = () => {
               
               <div className="flex gap-2">
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={() => {
                     setSelectedProduct(null);
@@ -188,7 +193,7 @@ const ProductSearch = () => {
                     setSearchQuery('');
                   }}
                 >
-                  Clear
+                  New Search
                 </Button>
               </div>
             </div>
@@ -212,20 +217,46 @@ const ProductSearch = () => {
           </div>
         </div>
       ) : (
-        <div className="text-center py-20 max-w-lg mx-auto">
-          <div className="mb-6">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <Search size={24} className="text-primary" />
+        <div className="text-center py-12 max-w-xl mx-auto">
+          <div className="mb-8">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Package size={28} className="text-primary" />
             </div>
             <h2 className="text-2xl font-bold mb-2">Search for Products</h2>
             <p className="text-muted-foreground">
-              Enter a product code or name to search for batches.
+              Enter a product code or name to search for batches and inventory details.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left mt-8">
+          {/* Recent Searches */}
+          {recentSearches.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center justify-center gap-1">
+                <Clock size={14} />
+                Recent Searches
+              </h3>
+              <div className="flex flex-wrap justify-center gap-2">
+                {recentSearches.map((code) => {
+                  const product = getProductByCode(code);
+                  return (
+                    <Button 
+                      key={code} 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-xs"
+                      onClick={() => product && handleProductSelect(product)}
+                    >
+                      {code}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left mt-12">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="rounded-xl p-4 bg-white/50 dark:bg-gray-900/40 backdrop-blur-sm border border-border">
+              <div key={i} className="rounded-xl p-5 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm border border-border shadow-md">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
                   <span className="text-primary font-bold">{i + 1}</span>
                 </div>
@@ -234,10 +265,10 @@ const ProductSearch = () => {
                 </h3>
                 <p className="text-xs text-muted-foreground">
                   {i === 0 
-                    ? "Enter a product code or name in the search bar" 
+                    ? "Enter a product code or name in the search bar above" 
                     : i === 1 
-                    ? "Choose the product from the search results" 
-                    : "Select a batch to view detailed information"
+                    ? "Choose the product from the search results list" 
+                    : "Select a batch to view detailed information about inventory"
                   }
                 </p>
               </div>
