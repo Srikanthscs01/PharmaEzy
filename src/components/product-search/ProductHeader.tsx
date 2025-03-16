@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FileText, Package, Button } from 'lucide-react';
+import { FileText, Package } from 'lucide-react';
 import { Product } from '@/lib/mockData';
 import { Button as UIButton } from '@/components/ui/button';
 

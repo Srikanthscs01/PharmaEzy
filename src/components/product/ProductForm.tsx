@@ -38,7 +38,7 @@ const ProductForm = ({
     <div className="form-card p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <ProductBasicInfoSection form={form} isEditing={isEditing} />
+          <ProductBasicInfoSection form={form} isEditing={isEditing} onSelectProduct={onSelectProduct} />
           <ProductPackingSection form={form} isEditing={isEditing} />
           <ProductCompanySection form={form} isEditing={isEditing} />
           <ProductRackSection form={form} isEditing={isEditing} />

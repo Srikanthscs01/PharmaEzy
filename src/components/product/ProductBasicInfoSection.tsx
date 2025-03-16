@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -11,13 +11,34 @@ import {
 } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from './types';
+import { Search } from 'lucide-react';
+import ProductSearchDialog from './ProductSearchDialog';
 
 interface ProductBasicInfoSectionProps {
   form: UseFormReturn<ProductFormValues>;
   isEditing: boolean;
+  onSelectProduct?: (productData: Partial<ProductFormValues>) => void;
 }
 
-const ProductBasicInfoSection = ({ form, isEditing }: ProductBasicInfoSectionProps) => {
+const ProductBasicInfoSection = ({ 
+  form, 
+  isEditing,
+  onSelectProduct 
+}: ProductBasicInfoSectionProps) => {
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
+
+  const handleCodeKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && isEditing && onSelectProduct) {
+      e.preventDefault();
+      setSearchDialogOpen(true);
+    }
+  };
+
+  const handleCheckOnline = () => {
+    console.log('Check Online clicked');
+    // Implement online check functionality
+  };
+
   return (
     <>
       <div className="grid grid-cols-3 gap-6">
@@ -29,7 +50,12 @@ const ProductBasicInfoSection = ({ form, isEditing }: ProductBasicInfoSectionPro
               <FormItem>
                 <FormLabel className="font-medium underline">Code:</FormLabel>
                 <FormControl>
-                  <Input {...field} disabled={!isEditing} className="input-field" />
+                  <Input 
+                    {...field} 
+                    disabled={!isEditing} 
+                    className="input-field" 
+                    onKeyDown={handleCodeKeyDown}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -52,7 +78,12 @@ const ProductBasicInfoSection = ({ form, isEditing }: ProductBasicInfoSectionPro
         </div>
         
         <div className="flex items-center space-x-4">
-          <Button type="button" variant="link" className="text-blue-600 hover:text-blue-800">
+          <Button 
+            type="button" 
+            variant="link" 
+            className="text-blue-600 hover:text-blue-800"
+            onClick={handleCheckOnline}
+          >
             Check Online (F8)
           </Button>
           
@@ -91,6 +122,14 @@ const ProductBasicInfoSection = ({ form, isEditing }: ProductBasicInfoSectionPro
           )}
         />
       </div>
+
+      {onSelectProduct && (
+        <ProductSearchDialog 
+          open={searchDialogOpen} 
+          onOpenChange={setSearchDialogOpen}
+          onSelectProduct={onSelectProduct}
+        />
+      )}
     </>
   );
 };
