@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -212,7 +211,6 @@ const Products = () => {
         </Sidebar>
         
         <div className="flex-1 flex flex-col">
-          {/* Header */}
           <header className="py-4 px-6 border-b border-border bg-white/60 backdrop-blur-md dark:bg-gray-900/60 shadow-sm sticky top-0 z-10">
             <div className="container max-w-7xl mx-auto">
               <div className="flex justify-between items-center">
@@ -230,15 +228,13 @@ const Products = () => {
             </div>
           </header>
           
-          {/* Main Content */}
           <div className="relative flex-1">
             <AnimatedBackground />
             <main className="relative z-10 flex-1 py-8 px-6">
               <div className="container max-w-7xl mx-auto">
-                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg border border-border">
+                <div className="form-card p-6">
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                      {/* Top Section */}
                       <div className="grid grid-cols-3 gap-6">
                         <div className="space-y-4">
                           <FormField
@@ -248,7 +244,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Code:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -263,7 +259,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">UniCode:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -296,7 +292,6 @@ const Products = () => {
                         </div>
                       </div>
                       
-                      {/* Name */}
                       <div>
                         <FormField
                           control={form.control}
@@ -305,14 +300,13 @@ const Products = () => {
                             <FormItem>
                               <FormLabel className="font-medium underline">Name:</FormLabel>
                               <FormControl>
-                                <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                <Input {...field} disabled={!isEditing} className="input-field" />
                               </FormControl>
                             </FormItem>
                           )}
                         />
                       </div>
                       
-                      {/* Packing Section */}
                       <div className="grid grid-cols-4 gap-4">
                         <FormField
                           control={form.control}
@@ -321,7 +315,7 @@ const Products = () => {
                             <FormItem>
                               <FormLabel className="font-medium underline">Packing:</FormLabel>
                               <FormControl>
-                                <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                <Input {...field} disabled={!isEditing} className="input-field" />
                               </FormControl>
                             </FormItem>
                           )}
@@ -334,7 +328,7 @@ const Products = () => {
                             <FormItem>
                               <FormLabel className="font-medium underline">Box Pack:</FormLabel>
                               <FormControl>
-                                <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                <Input {...field} disabled={!isEditing} className="input-field" />
                               </FormControl>
                             </FormItem>
                           )}
@@ -347,7 +341,7 @@ const Products = () => {
                             <FormItem>
                               <FormLabel className="font-medium underline">Case Pack:</FormLabel>
                               <FormControl>
-                                <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                <Input {...field} disabled={!isEditing} className="input-field" />
                               </FormControl>
                             </FormItem>
                           )}
@@ -360,14 +354,13 @@ const Products = () => {
                             <FormItem>
                               <FormLabel className="font-medium underline">Print Mark:</FormLabel>
                               <FormControl>
-                                <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                <Input {...field} disabled={!isEditing} className="input-field" />
                               </FormControl>
                             </FormItem>
                           )}
                         />
                       </div>
                       
-                      {/* Company and HSN */}
                       <div className="grid grid-cols-2 gap-6">
                         <FormField
                           control={form.control}
@@ -376,7 +369,7 @@ const Products = () => {
                             <FormItem>
                               <FormLabel className="font-medium underline">HSN:</FormLabel>
                               <FormControl>
-                                <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                <Input {...field} disabled={!isEditing} className="input-field" />
                               </FormControl>
                             </FormItem>
                           )}
@@ -389,14 +382,13 @@ const Products = () => {
                             <FormItem>
                               <FormLabel className="font-medium underline">Company:</FormLabel>
                               <FormControl>
-                                <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                <Input {...field} disabled={!isEditing} className="input-field" />
                               </FormControl>
                             </FormItem>
                           )}
                         />
                       </div>
                       
-                      {/* Rack and AIOD Section */}
                       <div className="grid grid-cols-10 gap-4">
                         <div className="col-span-2">
                           <FormField
@@ -406,7 +398,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Rack No:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -421,7 +413,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Mark:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -436,7 +428,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Sch:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -451,7 +443,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Aiod Code:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -459,7 +451,6 @@ const Products = () => {
                         </div>
                       </div>
                       
-                      {/* Marketing and Category */}
                       <div className="grid grid-cols-3 gap-6">
                         <div className="col-span-2">
                           <FormField
@@ -469,7 +460,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Marketed By:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -484,7 +475,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Category:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -492,9 +483,7 @@ const Products = () => {
                         </div>
                       </div>
                       
-                      {/* Left and Right Sections */}
                       <div className="grid grid-cols-12 gap-6">
-                        {/* Left Section (columns 1-7) */}
                         <div className="col-span-7 space-y-4">
                           <div className="grid grid-cols-2 gap-6">
                             <FormField
@@ -504,7 +493,7 @@ const Products = () => {
                                 <FormItem>
                                   <FormLabel className="font-medium underline">Sale Qty Min.:</FormLabel>
                                   <FormControl>
-                                    <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                    <Input {...field} disabled={!isEditing} className="input-field" />
                                   </FormControl>
                                 </FormItem>
                               )}
@@ -517,7 +506,7 @@ const Products = () => {
                                 <FormItem>
                                   <FormLabel className="font-medium underline">Max:</FormLabel>
                                   <FormControl>
-                                    <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                    <Input {...field} disabled={!isEditing} className="input-field" />
                                   </FormControl>
                                 </FormItem>
                               )}
@@ -532,7 +521,7 @@ const Products = () => {
                                 <FormItem>
                                   <FormLabel className="font-medium underline">Order Level:</FormLabel>
                                   <FormControl>
-                                    <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                    <Input {...field} disabled={!isEditing} className="input-field" />
                                   </FormControl>
                                 </FormItem>
                               )}
@@ -545,7 +534,7 @@ const Products = () => {
                                 <FormItem>
                                   <FormLabel className="font-medium underline">Order Qty:</FormLabel>
                                   <FormControl>
-                                    <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                    <Input {...field} disabled={!isEditing} className="input-field" />
                                   </FormControl>
                                 </FormItem>
                               )}
@@ -559,7 +548,7 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Box. Qty (Rates):</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
@@ -572,14 +561,13 @@ const Products = () => {
                               <FormItem>
                                 <FormLabel className="font-medium underline">Box. Pur.Price:</FormLabel>
                                 <FormControl>
-                                  <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                  <Input {...field} disabled={!isEditing} className="input-field" />
                                 </FormControl>
                               </FormItem>
                             )}
                           />
                         </div>
                         
-                        {/* Right Section (columns 8-12) */}
                         <div className="col-span-5 space-y-4">
                           <div className="border border-border rounded-md p-4 bg-cyan-50/50 dark:bg-cyan-950/30">
                             <div className="text-center font-semibold mb-3 underline">Scheme</div>
@@ -591,7 +579,7 @@ const Products = () => {
                                   <FormItem>
                                     <FormLabel className="font-medium">Purc. Qty:</FormLabel>
                                     <FormControl>
-                                      <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                      <Input {...field} disabled={!isEditing} className="input-field" />
                                     </FormControl>
                                   </FormItem>
                                 )}
@@ -604,7 +592,7 @@ const Products = () => {
                                   <FormItem>
                                     <FormLabel className="font-medium">Sale Qty:</FormLabel>
                                     <FormControl>
-                                      <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                      <Input {...field} disabled={!isEditing} className="input-field" />
                                     </FormControl>
                                   </FormItem>
                                 )}
@@ -617,7 +605,7 @@ const Products = () => {
                                   <FormItem>
                                     <FormLabel className="font-medium">Purc. Free:</FormLabel>
                                     <FormControl>
-                                      <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                      <Input {...field} disabled={!isEditing} className="input-field" />
                                     </FormControl>
                                   </FormItem>
                                 )}
@@ -630,7 +618,7 @@ const Products = () => {
                                   <FormItem>
                                     <FormLabel className="font-medium">Sale Free:</FormLabel>
                                     <FormControl>
-                                      <Input {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                      <Input {...field} disabled={!isEditing} className="input-field" />
                                     </FormControl>
                                   </FormItem>
                                 )}
@@ -657,7 +645,6 @@ const Products = () => {
                         </div>
                       </div>
                       
-                      {/* Comment */}
                       <div>
                         <FormField
                           control={form.control}
@@ -666,14 +653,13 @@ const Products = () => {
                             <FormItem>
                               <FormLabel className="font-medium underline">Comment:</FormLabel>
                               <FormControl>
-                                <Textarea {...field} disabled={!isEditing} className="bg-cyan-50 dark:bg-cyan-950/40" />
+                                <Textarea {...field} disabled={!isEditing} className="input-field" />
                               </FormControl>
                             </FormItem>
                           )}
                         />
                       </div>
                       
-                      {/* Additional Links */}
                       <div className="flex justify-end space-x-4">
                         <Button type="button" variant="outline" className="flex items-center gap-2">
                           <ArrowRightCircle size={16} />
@@ -686,21 +672,19 @@ const Products = () => {
                         </Button>
                       </div>
                       
-                      {/* Added/Modified Date */}
                       <div className="grid grid-cols-2 gap-6 text-sm text-muted-foreground">
                         <div>Added Date: N/A</div>
                         <div>Modified Date: N/A</div>
                       </div>
                       
-                      {/* Action Buttons */}
-                      <div className="flex justify-between border-t pt-6">
+                      <div className="flex justify-between border-t border-cyan-100 dark:border-cyan-800/30 pt-6">
                         <div className="flex gap-2">
-                          <Button type="button" variant="outline" className="bg-amber-100 hover:bg-amber-200" onClick={() => console.log('Search clicked')}>
+                          <Button type="button" variant="outline" className="bg-amber-100 hover:bg-amber-200 border-amber-200" onClick={() => console.log('Search clicked')}>
                             <Search size={16} className="mr-1" />
                             Search
                           </Button>
                           
-                          <Button type="button" variant="outline" className="bg-blue-100 hover:bg-blue-200" onClick={handleNew}>
+                          <Button type="button" variant="outline" className="bg-blue-100 hover:bg-blue-200 border-blue-200" onClick={handleNew}>
                             <Plus size={16} className="mr-1" />
                             New
                           </Button>
@@ -709,24 +693,24 @@ const Products = () => {
                         <div className="flex gap-2">
                           {isEditing ? (
                             <>
-                              <Button type="submit" variant="outline" className="bg-green-100 hover:bg-green-200">
+                              <Button type="submit" variant="outline" className="bg-green-100 hover:bg-green-200 border-green-200">
                                 <Save size={16} className="mr-1" />
                                 Save
                               </Button>
                               
-                              <Button type="button" variant="outline" className="bg-red-100 hover:bg-red-200" onClick={handleCancel}>
+                              <Button type="button" variant="outline" className="bg-red-100 hover:bg-red-200 border-red-200" onClick={handleCancel}>
                                 <X size={16} className="mr-1" />
                                 Cancel
                               </Button>
                             </>
                           ) : (
                             <>
-                              <Button type="button" variant="outline" className="bg-yellow-100 hover:bg-yellow-200" onClick={handleEdit}>
+                              <Button type="button" variant="outline" className="bg-yellow-100 hover:bg-yellow-200 border-yellow-200" onClick={handleEdit}>
                                 <Edit size={16} className="mr-1" />
                                 Edit
                               </Button>
                               
-                              <Button type="button" variant="outline" className="bg-red-100 hover:bg-red-200">
+                              <Button type="button" variant="outline" className="bg-red-100 hover:bg-red-200 border-red-200">
                                 <Trash2 size={16} className="mr-1" />
                                 Delete
                               </Button>
@@ -749,7 +733,6 @@ const Products = () => {
             </main>
           </div>
           
-          {/* Footer */}
           <footer className="py-4 px-6 text-sm text-center text-muted-foreground border-t border-border bg-white/60 backdrop-blur-md dark:bg-gray-900/60">
             <div className="container max-w-7xl mx-auto">
               <p>© {new Date().getFullYear()} Pharma Central. All rights reserved.</p>
