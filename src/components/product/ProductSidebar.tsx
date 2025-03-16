@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   Sidebar, 
   SidebarContent, 
@@ -16,6 +16,9 @@ import {
 import { Tablets, Home, Package, ListChecks, BarChart3, Users, DollarSign, ShoppingBag, Receipt } from 'lucide-react';
 
 const ProductSidebar = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -32,7 +35,7 @@ const ProductSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Home" asChild>
+                <SidebarMenuButton tooltip="Home" isActive={currentPath === '/'} asChild>
                   <Link to="/">
                     <Home size={18} />
                     <span>Home</span>
@@ -40,7 +43,7 @@ const ProductSidebar = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Products" isActive={true} asChild>
+                <SidebarMenuButton tooltip="Products" isActive={currentPath === '/products'} asChild>
                   <Link to="/products">
                     <Package size={18} />
                     <span>Products</span>
@@ -69,13 +72,13 @@ const ProductSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
         
-        {/* New Transactions Group */}
+        {/* Transactions Group */}
         <SidebarGroup>
           <SidebarGroupLabel>Transactions</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Sales" asChild>
+                <SidebarMenuButton tooltip="Sales" isActive={currentPath === '/sales'} asChild>
                   <Link to="/sales">
                     <DollarSign size={18} />
                     <span>Sales</span>
@@ -83,7 +86,7 @@ const ProductSidebar = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Purchases" asChild>
+                <SidebarMenuButton tooltip="Purchases" isActive={currentPath === '/purchases'} asChild>
                   <Link to="/purchases">
                     <ShoppingBag size={18} />
                     <span>Purchases</span>
@@ -91,7 +94,7 @@ const ProductSidebar = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Receipts" asChild>
+                <SidebarMenuButton tooltip="Receipts" isActive={currentPath === '/receipts'} asChild>
                   <Link to="/receipts">
                     <Receipt size={18} />
                     <span>Receipts</span>
