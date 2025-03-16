@@ -13,7 +13,7 @@ import {
   SidebarGroupContent,
   SidebarFooter
 } from '@/components/ui/sidebar';
-import { Tablets, Home, Package, ListChecks, BarChart3, Users } from 'lucide-react';
+import { Tablets, Home, Package, ListChecks, BarChart3, Users, DollarSign, ShoppingBag, Receipt } from 'lucide-react';
 
 const ProductSidebar = () => {
   return (
@@ -63,6 +63,39 @@ const ProductSidebar = () => {
                 <SidebarMenuButton tooltip="Suppliers">
                   <Users size={18} />
                   <span>Suppliers</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        
+        {/* New Transactions Group */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Transactions</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Sales" asChild>
+                  <Link to="/sales">
+                    <DollarSign size={18} />
+                    <span>Sales</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Purchases" asChild>
+                  <Link to="/purchases">
+                    <ShoppingBag size={18} />
+                    <span>Purchases</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Receipts" asChild>
+                  <Link to="/receipts">
+                    <Receipt size={18} />
+                    <span>Receipts</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
