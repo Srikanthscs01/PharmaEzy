@@ -9,6 +9,7 @@ import SalesForm from '@/components/sales/SalesForm';
 import SalesTable from '@/components/sales/SalesTable';
 import SalesSummary from '@/components/sales/SalesSummary';
 import SalesFooter from '@/components/sales/SalesFooter';
+import { SalesItem } from '@/components/sales/types';
 
 const Sales = () => {
   const { toast } = useToast();
