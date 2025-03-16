@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import ProductSearch from '@/components/ProductSearch';
 import AnimatedBackground from '@/components/AnimatedBackground';
-import { MoveUpRight, PackageCheck, Settings, Home, Package, ListChecks, BarChart3, Users } from 'lucide-react';
+import { MoveUpRight, Settings, Home, Package, ListChecks, BarChart3, Users, Tablets, Pill } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
   SidebarProvider, 
@@ -27,9 +27,9 @@ const Index = () => {
           <SidebarHeader>
             <div className="flex items-center gap-2 px-4 py-2">
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-                <PackageCheck size={16} className="text-white" />
+                <Tablets size={16} className="text-white" />
               </div>
-              <h1 className="text-lg font-bold">Batch Master</h1>
+              <h1 className="text-lg font-bold">Pharma Central</h1>
             </div>
           </SidebarHeader>
           <SidebarContent>
@@ -73,7 +73,7 @@ const Index = () => {
           </SidebarContent>
           <SidebarFooter>
             <div className="px-4 py-2 text-xs text-muted-foreground">
-              <p>© {new Date().getFullYear()} Product Batch Master</p>
+              <p>© {new Date().getFullYear()} Pharma Central</p>
             </div>
           </SidebarFooter>
         </Sidebar>
@@ -110,7 +110,7 @@ const Index = () => {
           {/* Footer */}
           <footer className="py-4 px-6 text-sm text-center text-muted-foreground border-t border-border bg-white/60 backdrop-blur-md dark:bg-gray-900/60">
             <div className="container max-w-7xl mx-auto">
-              <p>© {new Date().getFullYear()} Product Batch Master. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} Pharma Central. All rights reserved.</p>
             </div>
           </footer>
         </div>
