@@ -22,6 +22,7 @@ interface ProductFormProps {
   onNew: () => void;
   onEdit: () => void;
   onCancel: () => void;
+  onSelectProduct: (productData: Partial<ProductFormValues>) => void;
 }
 
 const ProductForm = ({ 
@@ -30,7 +31,8 @@ const ProductForm = ({
   onSubmit, 
   onNew, 
   onEdit, 
-  onCancel 
+  onCancel,
+  onSelectProduct
 }: ProductFormProps) => {
   return (
     <div className="form-card p-6">
@@ -60,6 +62,7 @@ const ProductForm = ({
             onNew={onNew} 
             onEdit={onEdit} 
             onCancel={onCancel}
+            onSelectProduct={onSelectProduct}
           />
         </form>
       </Form>

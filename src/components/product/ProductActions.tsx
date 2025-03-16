@@ -1,21 +1,37 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Search, Save, Edit, X, Plus, Trash2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import ProductSearchDialog from './ProductSearchDialog';
+import { ProductFormValues } from './types';
 
 interface ProductActionsProps {
   isEditing: boolean;
   onNew: () => void;
   onEdit: () => void;
   onCancel: () => void;
+  onSelectProduct: (productData: Partial<ProductFormValues>) => void;
 }
 
-const ProductActions = ({ isEditing, onNew, onEdit, onCancel }: ProductActionsProps) => {
+const ProductActions = ({ 
+  isEditing, 
+  onNew, 
+  onEdit, 
+  onCancel,
+  onSelectProduct
+}: ProductActionsProps) => {
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
+
   return (
     <div className="flex justify-between border-t border-cyan-100 dark:border-cyan-800/30 pt-6">
       <div className="flex gap-2">
-        <Button type="button" variant="outline" className="bg-amber-100 hover:bg-amber-200 border-amber-200" onClick={() => console.log('Search clicked')}>
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="bg-amber-100 hover:bg-amber-200 border-amber-200" 
+          onClick={() => setSearchDialogOpen(true)}
+        >
           <Search size={16} className="mr-1" />
           Search
         </Button>
@@ -61,6 +77,12 @@ const ProductActions = ({ isEditing, onNew, onEdit, onCancel }: ProductActionsPr
           Close
         </Button>
       </div>
+
+      <ProductSearchDialog 
+        open={searchDialogOpen} 
+        onOpenChange={setSearchDialogOpen}
+        onSelectProduct={onSelectProduct}
+      />
     </div>
   );
 };

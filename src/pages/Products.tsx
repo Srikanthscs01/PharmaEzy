@@ -81,6 +81,21 @@ const Products = () => {
     });
   };
 
+  const handleSelectProduct = (productData: Partial<ProductFormValues>) => {
+    // Enable editing when a product is selected
+    setIsEditing(true);
+    
+    // Update the form with the product data
+    Object.entries(productData).forEach(([key, value]) => {
+      form.setValue(key as keyof ProductFormValues, value);
+    });
+    
+    toast({
+      title: "Product Loaded",
+      description: `${productData.name} details loaded into form`,
+    });
+  };
+
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full">
@@ -100,6 +115,7 @@ const Products = () => {
                   onNew={handleNew}
                   onEdit={handleEdit}
                   onCancel={handleCancel}
+                  onSelectProduct={handleSelectProduct}
                 />
               </div>
             </main>
