@@ -2,86 +2,17 @@
 import { useState } from 'react';
 import ProductSearch from '@/components/ProductSearch';
 import AnimatedBackground from '@/components/AnimatedBackground';
-import { MoveUpRight, Settings, Home, Package, ListChecks, BarChart3, Users, Tablets, Pill } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { 
-  SidebarProvider, 
-  Sidebar, 
-  SidebarContent, 
-  SidebarHeader, 
-  SidebarTrigger,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarFooter
-} from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import ProductSidebar from '@/components/product/ProductSidebar';
 
 const Index = () => {
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full">
-        <Sidebar>
-          <SidebarHeader>
-            <div className="flex items-center gap-2 px-4 py-2">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-                <Tablets size={16} className="text-white" />
-              </div>
-              <h1 className="text-lg font-bold">Pharma Central</h1>
-            </div>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Home" isActive={true} asChild>
-                      <Link to="/">
-                        <Home size={18} />
-                        <span>Home</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Products" asChild>
-                      <Link to="/products">
-                        <Package size={18} />
-                        <span>Products</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Batches">
-                      <ListChecks size={18} />
-                      <span>Batches</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Analytics">
-                      <BarChart3 size={18} />
-                      <span>Analytics</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Suppliers">
-                      <Users size={18} />
-                      <span>Suppliers</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-          <SidebarFooter>
-            <div className="px-4 py-2 text-xs text-muted-foreground">
-              <p>© {new Date().getFullYear()} Pharma Central</p>
-            </div>
-          </SidebarFooter>
-        </Sidebar>
+        <ProductSidebar />
         
         <div className="flex-1 flex flex-col">
           {/* Header */}
