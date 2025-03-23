@@ -1,20 +1,25 @@
 
 import React from 'react';
-import { DollarSign } from 'lucide-react';
+import { DollarSign, User, Calendar } from 'lucide-react';
 
 const SalesHeader = () => {
   return (
-    <header className="bg-white border-b shadow-sm px-6 py-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="bg-primary p-1.5 rounded-md shadow">
-            <DollarSign className="h-5 w-5 text-white" />
-          </div>
-          <h1 className="text-xl font-semibold">Sales</h1>
+    <header className="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-4 flex items-center justify-between shadow-md">
+      <div className="flex items-center gap-3">
+        <div className="bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg">
+          <DollarSign size={24} className="text-orange-500" />
         </div>
-        
-        <div className="text-sm text-muted-foreground">
-          <span>Today: {new Date().toLocaleDateString()}</span>
+        <h1 className="text-xl font-bold">Sales Invoice</h1>
+      </div>
+      
+      <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-2">
+          <User size={16} />
+          <span>Admin</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Calendar size={16} />
+          <span>{new Date().toLocaleDateString()}</span>
         </div>
       </div>
     </header>

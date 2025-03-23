@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Save, Trash2, Printer, X } from 'lucide-react';
+import { Save, Trash2, Printer, XCircle, FileEdit, Settings } from 'lucide-react';
 
 interface SalesFooterProps {
   onSave: () => void;
@@ -9,41 +9,49 @@ interface SalesFooterProps {
 
 const SalesFooter = ({ onSave }: SalesFooterProps) => {
   return (
-    <div className="mt-4 bg-orange-100 p-4 rounded-md flex items-center justify-between shadow-md">
+    <div className="mt-4 bg-gradient-to-b from-orange-50 to-orange-100 p-4 rounded-md flex items-center justify-between shadow-md border border-orange-200">
       <div className="flex items-center gap-2">
-        <Button variant="destructive" className="bg-gray-300 text-gray-800 hover:bg-gray-400 border-gray-500">
-          <Trash2 className="h-5 w-5 mr-1" /> DELETE
+        <Button variant="destructive" size="sm" className="gap-1">
+          <Trash2 size={16} />
+          Delete
         </Button>
-        <Button variant="outline" className="bg-gray-300 text-gray-800 hover:bg-gray-400 border-gray-500">
-          OPTIONS
+        <Button variant="outline" size="sm" className="gap-1 border-orange-300 bg-white text-gray-700 hover:bg-orange-100">
+          <Settings size={16} />
+          Options
         </Button>
-        <Button variant="outline" className="bg-gray-300 text-gray-800 hover:bg-gray-400 border-gray-500">
-          MODIFY
+        <Button variant="outline" size="sm" className="gap-1 border-orange-300 bg-white text-gray-700 hover:bg-orange-100">
+          <FileEdit size={16} />
+          Modify
         </Button>
       </div>
       
       <div className="flex items-center">
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-gray-500 mr-4">
           Page: 1 of 1
         </div>
       </div>
       
       <div className="flex items-center gap-2">
-        <Button variant="outline" className="bg-gray-300 text-gray-800 hover:bg-gray-400 border-gray-500">
-          <Printer className="h-5 w-5 mr-1" /> PRINT
+        <Button variant="outline" size="sm" className="gap-1 border-orange-300 bg-white text-gray-700 hover:bg-orange-100">
+          <Printer size={16} />
+          Print
         </Button>
         <Button 
           onClick={onSave}
           variant="default" 
-          className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold border-yellow-700"
+          size="sm"
+          className="bg-orange-500 hover:bg-orange-600 text-white font-medium gap-1"
         >
-          <Save className="h-5 w-5 mr-1" /> SAVE
+          <Save size={16} />
+          Save
         </Button>
         <Button 
-          variant="default" 
-          className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold border-yellow-700"
+          variant="outline" 
+          size="sm"
+          className="border-orange-300 bg-white text-gray-700 hover:bg-orange-100 gap-1"
         >
-          <X className="h-5 w-5 mr-1" /> CLOSE
+          <XCircle size={16} />
+          Close
         </Button>
       </div>
     </div>
