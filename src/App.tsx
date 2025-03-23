@@ -10,6 +10,7 @@ import Sales from "./pages/Sales";
 import Purchases from "./pages/Purchases";
 import Receipts from "./pages/Receipts";
 import NotFound from "./pages/NotFound";
+import TabNavigation from "./components/layout/TabNavigation";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <TabNavigation />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/products" element={<Products />} />
