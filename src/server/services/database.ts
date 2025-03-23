@@ -1,269 +1,390 @@
 
+import prisma from './prisma';
 import { Product } from '../models/Product';
 import { Batch } from '../models/Batch';
-import { Sale } from '../models/Sale';
-import { Purchase } from '../models/Purchase';
-import { Receipt } from '../models/Receipt';
-import { v4 as uuidv4 } from 'uuid';
-
-// In-memory database simulation
-let products: Product[] = [];
-let batches: Batch[] = [];
-let sales: Sale[] = [];
-let purchases: Purchase[] = [];
-let receipts: Receipt[] = [];
-
-// Import initial data from mockData
-import { getProducts } from '../../lib/mockData';
-
-// Initialize with mock data
-const initializeDb = () => {
-  const mockProducts = getProducts();
-  
-  mockProducts.forEach(mockProduct => {
-    // Add product
-    const product: Product = {
-      id: uuidv4(),
-      code: mockProduct.code,
-      name: mockProduct.name,
-      rackNo: mockProduct.rack,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    products.push(product);
-    
-    // Add batches
-    mockProduct.batches.forEach(mockBatch => {
-      const batch: Batch = {
-        id: uuidv4(),
-        productCode: mockProduct.code,
-        batchNo: mockBatch.batchNo,
-        billPrice: mockBatch.billPrice,
-        mrp: mockBatch.mrp,
-        expiry: mockBatch.expiry,
-        qty: mockBatch.qty,
-        qit: mockBatch.qit,
-        purNo: mockBatch.purNo || '',
-        purDate: mockBatch.purDate || '',
-        rcvdDate: mockBatch.rcvdDate || '',
-        from: mockBatch.from || '',
-        barCode: mockBatch.barCode,
-        purPrice: mockBatch.purPrice,
-        scheme: mockBatch.scheme,
-        schemePct: mockBatch.schemePct,
-        schAmt: mockBatch.schAmt,
-        disPct: mockBatch.disPct,
-        addDisPct: mockBatch.addDisPct,
-        gstPct: mockBatch.gstPct,
-        specialPrice: mockBatch.specialPrice,
-        stockistPrice: mockBatch.stockistPrice,
-        costPrice: mockBatch.costPrice,
-        acPrice: mockBatch.acPrice,
-        retailerMarginPct: mockBatch.retailerMarginPct,
-        marginPct: mockBatch.marginPct,
-        invNo: mockBatch.invNo,
-        rNo: mockBatch.rNo,
-        freeQty: mockBatch.freeQty,
-        supplier: mockBatch.supplier,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      batches.push(batch);
-    });
-  });
-  
-  console.log(`Database initialized with ${products.length} products and ${batches.length} batches`);
-};
-
-// Initialize the database
-initializeDb();
+import { Sale, SaleItem } from '../models/Sale';
+import { Purchase, PurchaseItem } from '../models/Purchase';
+import { Receipt, BillItem, ChequeDetails, DraweeDetails } from '../models/Receipt';
 
 // Product Services
-export const getAllProducts = (): Product[] => products;
-
-export const getProductById = (id: string): Product | undefined => 
-  products.find(p => p.id === id);
-
-export const getProductByCode = (code: string): Product | undefined => 
-  products.find(p => p.code === code);
-
-export const createProduct = (product: Product): Product => {
-  const newProduct = { 
-    ...product, 
-    id: uuidv4(),
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  products.push(newProduct);
-  return newProduct;
+export const getAllProducts = async (): Promise<Product[]> => {
+  return await prisma.product.findMany();
 };
 
-export const updateProduct = (id: string, product: Partial<Product>): Product | null => {
-  const index = products.findIndex(p => p.id === id);
-  if (index === -1) return null;
-  
-  products[index] = { 
-    ...products[index], 
-    ...product,
-    updatedAt: new Date()
-  };
-  return products[index];
+export const getProductById = async (id: string): Promise<Product | null> => {
+  return await prisma.product.findUnique({
+    where: { id }
+  });
 };
 
-export const deleteProduct = (id: string): boolean => {
-  const initialLength = products.length;
-  products = products.filter(p => p.id !== id);
-  return products.length < initialLength;
+export const getProductByCode = async (code: string): Promise<Product | null> => {
+  return await prisma.product.findUnique({
+    where: { code }
+  });
 };
 
-export const searchProducts = (query: string): Product[] => {
-  const lowerQuery = query.toLowerCase();
-  return products.filter(
-    product => 
-      product.code.toLowerCase().includes(lowerQuery) || 
-      product.name.toLowerCase().includes(lowerQuery)
-  );
+export const createProduct = async (product: Product): Promise<Product> => {
+  return await prisma.product.create({
+    data: product
+  });
+};
+
+export const updateProduct = async (id: string, product: Partial<Product>): Promise<Product | null> => {
+  return await prisma.product.update({
+    where: { id },
+    data: product
+  });
+};
+
+export const deleteProduct = async (id: string): Promise<boolean> => {
+  try {
+    await prisma.product.delete({
+      where: { id }
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const searchProducts = async (query: string): Promise<Product[]> => {
+  return await prisma.product.findMany({
+    where: {
+      OR: [
+        { code: { contains: query } },
+        { name: { contains: query } }
+      ]
+    }
+  });
 };
 
 // Batch Services
-export const getAllBatches = (): Batch[] => batches;
-
-export const getBatchById = (id: string): Batch | undefined => 
-  batches.find(b => b.id === id);
-
-export const getBatchesByProductCode = (productCode: string): Batch[] => 
-  batches.filter(b => b.productCode === productCode);
-
-export const createBatch = (batch: Batch): Batch => {
-  const newBatch = { 
-    ...batch, 
-    id: uuidv4(),
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  batches.push(newBatch);
-  return newBatch;
+export const getAllBatches = async (): Promise<Batch[]> => {
+  return await prisma.batch.findMany();
 };
 
-export const updateBatch = (id: string, batch: Partial<Batch>): Batch | null => {
-  const index = batches.findIndex(b => b.id === id);
-  if (index === -1) return null;
-  
-  batches[index] = { 
-    ...batches[index], 
-    ...batch,
-    updatedAt: new Date()
-  };
-  return batches[index];
+export const getBatchById = async (id: string): Promise<Batch | null> => {
+  return await prisma.batch.findUnique({
+    where: { id }
+  });
 };
 
-export const deleteBatch = (id: string): boolean => {
-  const initialLength = batches.length;
-  batches = batches.filter(b => b.id !== id);
-  return batches.length < initialLength;
+export const getBatchesByProductCode = async (productCode: string): Promise<Batch[]> => {
+  return await prisma.batch.findMany({
+    where: { productCode }
+  });
+};
+
+export const createBatch = async (batch: Batch): Promise<Batch> => {
+  return await prisma.batch.create({
+    data: batch
+  });
+};
+
+export const updateBatch = async (id: string, batch: Partial<Batch>): Promise<Batch | null> => {
+  return await prisma.batch.update({
+    where: { id },
+    data: batch
+  });
+};
+
+export const deleteBatch = async (id: string): Promise<boolean> => {
+  try {
+    await prisma.batch.delete({
+      where: { id }
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 // Sales Services
-export const getAllSales = (): Sale[] => sales;
-
-export const getSaleById = (id: string): Sale | undefined => 
-  sales.find(s => s.id === id);
-
-export const createSale = (sale: Sale): Sale => {
-  const newSale = { 
-    ...sale, 
-    id: uuidv4(),
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  sales.push(newSale);
-  return newSale;
+export const getAllSales = async (): Promise<Sale[]> => {
+  return await prisma.sale.findMany({
+    include: { items: true }
+  });
 };
 
-export const updateSale = (id: string, sale: Partial<Sale>): Sale | null => {
-  const index = sales.findIndex(s => s.id === id);
-  if (index === -1) return null;
+export const getSaleById = async (id: string): Promise<Sale | null> => {
+  return await prisma.sale.findUnique({
+    where: { id },
+    include: { items: true }
+  });
+};
+
+export const createSale = async (sale: Sale): Promise<Sale> => {
+  const { items, ...saleData } = sale;
   
-  sales[index] = { 
-    ...sales[index], 
-    ...sale,
-    updatedAt: new Date()
-  };
-  return sales[index];
+  return await prisma.$transaction(async (tx) => {
+    // Create the sale record
+    const createdSale = await tx.sale.create({
+      data: {
+        ...saleData,
+        items: {
+          create: items
+        }
+      },
+      include: { items: true }
+    });
+    
+    return createdSale;
+  });
 };
 
-export const deleteSale = (id: string): boolean => {
-  const initialLength = sales.length;
-  sales = sales.filter(s => s.id !== id);
-  return sales.length < initialLength;
+export const updateSale = async (id: string, sale: Partial<Sale>): Promise<Sale | null> => {
+  const { items, ...saleData } = sale;
+  
+  return await prisma.$transaction(async (tx) => {
+    // Update sale record
+    const updatedSale = await tx.sale.update({
+      where: { id },
+      data: saleData,
+    });
+    
+    // If items are provided, replace them
+    if (items && items.length > 0) {
+      // Delete existing items
+      await tx.saleItem.deleteMany({
+        where: { saleId: id }
+      });
+      
+      // Create new items
+      await Promise.all(items.map(item => 
+        tx.saleItem.create({
+          data: {
+            ...item,
+            saleId: id
+          }
+        })
+      ));
+    }
+    
+    // Return the updated sale with items
+    return await tx.sale.findUnique({
+      where: { id },
+      include: { items: true }
+    });
+  });
+};
+
+export const deleteSale = async (id: string): Promise<boolean> => {
+  try {
+    await prisma.sale.delete({
+      where: { id }
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 // Purchase Services
-export const getAllPurchases = (): Purchase[] => purchases;
-
-export const getPurchaseById = (id: string): Purchase | undefined => 
-  purchases.find(p => p.id === id);
-
-export const createPurchase = (purchase: Purchase): Purchase => {
-  const newPurchase = { 
-    ...purchase, 
-    id: uuidv4(),
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  purchases.push(newPurchase);
-  return newPurchase;
+export const getAllPurchases = async (): Promise<Purchase[]> => {
+  return await prisma.purchase.findMany({
+    include: { items: true }
+  });
 };
 
-export const updatePurchase = (id: string, purchase: Partial<Purchase>): Purchase | null => {
-  const index = purchases.findIndex(p => p.id === id);
-  if (index === -1) return null;
+export const getPurchaseById = async (id: string): Promise<Purchase | null> => {
+  return await prisma.purchase.findUnique({
+    where: { id },
+    include: { items: true }
+  });
+};
+
+export const createPurchase = async (purchase: Purchase): Promise<Purchase> => {
+  const { items, ...purchaseData } = purchase;
   
-  purchases[index] = { 
-    ...purchases[index], 
-    ...purchase,
-    updatedAt: new Date()
-  };
-  return purchases[index];
+  return await prisma.$transaction(async (tx) => {
+    // Create the purchase record
+    const createdPurchase = await tx.purchase.create({
+      data: {
+        ...purchaseData,
+        items: {
+          create: items
+        }
+      },
+      include: { items: true }
+    });
+    
+    return createdPurchase;
+  });
 };
 
-export const deletePurchase = (id: string): boolean => {
-  const initialLength = purchases.length;
-  purchases = purchases.filter(p => p.id !== id);
-  return purchases.length < initialLength;
+export const updatePurchase = async (id: string, purchase: Partial<Purchase>): Promise<Purchase | null> => {
+  const { items, ...purchaseData } = purchase;
+  
+  return await prisma.$transaction(async (tx) => {
+    // Update purchase record
+    const updatedPurchase = await tx.purchase.update({
+      where: { id },
+      data: purchaseData,
+    });
+    
+    // If items are provided, replace them
+    if (items && items.length > 0) {
+      // Delete existing items
+      await tx.purchaseItem.deleteMany({
+        where: { purchaseId: id }
+      });
+      
+      // Create new items
+      await Promise.all(items.map(item => 
+        tx.purchaseItem.create({
+          data: {
+            ...item,
+            purchaseId: id
+          }
+        })
+      ));
+    }
+    
+    // Return the updated purchase with items
+    return await tx.purchase.findUnique({
+      where: { id },
+      include: { items: true }
+    });
+  });
+};
+
+export const deletePurchase = async (id: string): Promise<boolean> => {
+  try {
+    await prisma.purchase.delete({
+      where: { id }
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 // Receipt Services
-export const getAllReceipts = (): Receipt[] => receipts;
-
-export const getReceiptById = (id: string): Receipt | undefined => 
-  receipts.find(r => r.id === id);
-
-export const createReceipt = (receipt: Receipt): Receipt => {
-  const newReceipt = { 
-    ...receipt, 
-    id: uuidv4(),
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  receipts.push(newReceipt);
-  return newReceipt;
+export const getAllReceipts = async (): Promise<Receipt[]> => {
+  return await prisma.receipt.findMany({
+    include: { 
+      bills: true,
+      chequeDetails: true,
+      draweeDetails: true
+    }
+  });
 };
 
-export const updateReceipt = (id: string, receipt: Partial<Receipt>): Receipt | null => {
-  const index = receipts.findIndex(r => r.id === id);
-  if (index === -1) return null;
+export const getReceiptById = async (id: string): Promise<Receipt | null> => {
+  return await prisma.receipt.findUnique({
+    where: { id },
+    include: { 
+      bills: true,
+      chequeDetails: true,
+      draweeDetails: true
+    }
+  });
+};
+
+export const createReceipt = async (receipt: Receipt): Promise<Receipt> => {
+  const { bills, chequeDetails, draweeDetails, ...receiptData } = receipt;
   
-  receipts[index] = { 
-    ...receipts[index], 
-    ...receipt,
-    updatedAt: new Date()
-  };
-  return receipts[index];
+  return await prisma.$transaction(async (tx) => {
+    // Create the receipt record
+    const createdReceipt = await tx.receipt.create({
+      data: {
+        ...receiptData,
+        bills: {
+          create: bills
+        },
+        ...(chequeDetails && {
+          chequeDetails: {
+            create: chequeDetails
+          }
+        }),
+        ...(draweeDetails && {
+          draweeDetails: {
+            create: draweeDetails
+          }
+        })
+      },
+      include: { 
+        bills: true,
+        chequeDetails: true,
+        draweeDetails: true
+      }
+    });
+    
+    return createdReceipt;
+  });
 };
 
-export const deleteReceipt = (id: string): boolean => {
-  const initialLength = receipts.length;
-  receipts = receipts.filter(r => r.id !== id);
-  return receipts.length < initialLength;
+export const updateReceipt = async (id: string, receipt: Partial<Receipt>): Promise<Receipt | null> => {
+  const { bills, chequeDetails, draweeDetails, ...receiptData } = receipt;
+  
+  return await prisma.$transaction(async (tx) => {
+    // Update receipt record
+    const updatedReceipt = await tx.receipt.update({
+      where: { id },
+      data: receiptData,
+    });
+    
+    // If bills are provided, replace them
+    if (bills && bills.length > 0) {
+      // Delete existing bills
+      await tx.billItem.deleteMany({
+        where: { receiptId: id }
+      });
+      
+      // Create new bills
+      await Promise.all(bills.map(bill => 
+        tx.billItem.create({
+          data: {
+            ...bill,
+            receiptId: id
+          }
+        })
+      ));
+    }
+    
+    // If cheque details are provided, update or create them
+    if (chequeDetails) {
+      await tx.chequeDetails.upsert({
+        where: { receiptId: id },
+        update: chequeDetails,
+        create: {
+          ...chequeDetails,
+          receiptId: id
+        }
+      });
+    }
+    
+    // If drawee details are provided, update or create them
+    if (draweeDetails) {
+      await tx.draweeDetails.upsert({
+        where: { receiptId: id },
+        update: draweeDetails,
+        create: {
+          ...draweeDetails,
+          receiptId: id
+        }
+      });
+    }
+    
+    // Return the updated receipt with related entities
+    return await tx.receipt.findUnique({
+      where: { id },
+      include: { 
+        bills: true,
+        chequeDetails: true,
+        draweeDetails: true
+      }
+    });
+  });
+};
+
+export const deleteReceipt = async (id: string): Promise<boolean> => {
+  try {
+    await prisma.receipt.delete({
+      where: { id }
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 };

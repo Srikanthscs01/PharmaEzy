@@ -2,9 +2,9 @@
 import { Request, Response } from 'express';
 import * as db from '../services/database';
 
-export const getAllBatches = (req: Request, res: Response) => {
+export const getAllBatches = async (req: Request, res: Response) => {
   try {
-    const batches = db.getAllBatches();
+    const batches = await db.getAllBatches();
     res.status(200).json(batches);
   } catch (error) {
     console.error('Error fetching batches:', error);
@@ -12,10 +12,10 @@ export const getAllBatches = (req: Request, res: Response) => {
   }
 };
 
-export const getBatchById = (req: Request, res: Response) => {
+export const getBatchById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const batch = db.getBatchById(id);
+    const batch = await db.getBatchById(id);
     
     if (!batch) {
       return res.status(404).json({ message: 'Batch not found' });
@@ -28,10 +28,10 @@ export const getBatchById = (req: Request, res: Response) => {
   }
 };
 
-export const getBatchesByProductCode = (req: Request, res: Response) => {
+export const getBatchesByProductCode = async (req: Request, res: Response) => {
   try {
     const { productCode } = req.params;
-    const batches = db.getBatchesByProductCode(productCode);
+    const batches = await db.getBatchesByProductCode(productCode);
     
     res.status(200).json(batches);
   } catch (error) {
@@ -40,7 +40,7 @@ export const getBatchesByProductCode = (req: Request, res: Response) => {
   }
 };
 
-export const createBatch = (req: Request, res: Response) => {
+export const createBatch = async (req: Request, res: Response) => {
   try {
     const batch = req.body;
     
@@ -50,12 +50,12 @@ export const createBatch = (req: Request, res: Response) => {
     }
     
     // Check if product exists
-    const product = db.getProductByCode(batch.productCode);
+    const product = await db.getProductByCode(batch.productCode);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
     
-    const newBatch = db.createBatch(batch);
+    const newBatch = await db.createBatch(batch);
     res.status(201).json(newBatch);
   } catch (error) {
     console.error('Error creating batch:', error);
@@ -63,12 +63,12 @@ export const createBatch = (req: Request, res: Response) => {
   }
 };
 
-export const updateBatch = (req: Request, res: Response) => {
+export const updateBatch = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const batch = req.body;
     
-    const updatedBatch = db.updateBatch(id, batch);
+    const updatedBatch = await db.updateBatch(id, batch);
     
     if (!updatedBatch) {
       return res.status(404).json({ message: 'Batch not found' });
@@ -81,10 +81,10 @@ export const updateBatch = (req: Request, res: Response) => {
   }
 };
 
-export const deleteBatch = (req: Request, res: Response) => {
+export const deleteBatch = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const deleted = db.deleteBatch(id);
+    const deleted = await db.deleteBatch(id);
     
     if (!deleted) {
       return res.status(404).json({ message: 'Batch not found' });

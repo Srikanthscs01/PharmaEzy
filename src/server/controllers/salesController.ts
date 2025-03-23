@@ -2,9 +2,9 @@
 import { Request, Response } from 'express';
 import * as db from '../services/database';
 
-export const getAllSales = (req: Request, res: Response) => {
+export const getAllSales = async (req: Request, res: Response) => {
   try {
-    const sales = db.getAllSales();
+    const sales = await db.getAllSales();
     res.status(200).json(sales);
   } catch (error) {
     console.error('Error fetching sales:', error);
@@ -12,10 +12,10 @@ export const getAllSales = (req: Request, res: Response) => {
   }
 };
 
-export const getSaleById = (req: Request, res: Response) => {
+export const getSaleById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const sale = db.getSaleById(id);
+    const sale = await db.getSaleById(id);
     
     if (!sale) {
       return res.status(404).json({ message: 'Sale not found' });
@@ -28,7 +28,7 @@ export const getSaleById = (req: Request, res: Response) => {
   }
 };
 
-export const createSale = (req: Request, res: Response) => {
+export const createSale = async (req: Request, res: Response) => {
   try {
     const sale = req.body;
     
@@ -44,20 +44,20 @@ export const createSale = (req: Request, res: Response) => {
       }
     }
     
-    const newSale = db.createSale(sale);
+    const newSale = await db.createSale(sale);
     
-    // Update inventory (reduce quantities)
-    sale.items.forEach(item => {
-      const batches = db.getBatchesByProductCode(item.code);
+    // Update inventory (reduce quantities) - this would be handled by a transaction in a real app
+    for (const item of sale.items) {
+      const batches = await db.getBatchesByProductCode(item.code);
       if (batches.length > 0) {
         const batch = batches.find(b => b.batchNo === item.batch) || batches[0];
         if (batch) {
-          db.updateBatch(batch.id!, {
+          await db.updateBatch(batch.id!, {
             qty: Math.max(0, batch.qty - item.qty)
           });
         }
       }
-    });
+    }
     
     res.status(201).json(newSale);
   } catch (error) {
@@ -66,17 +66,17 @@ export const createSale = (req: Request, res: Response) => {
   }
 };
 
-export const updateSale = (req: Request, res: Response) => {
+export const updateSale = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const sale = req.body;
     
-    const existingSale = db.getSaleById(id);
+    const existingSale = await db.getSaleById(id);
     if (!existingSale) {
       return res.status(404).json({ message: 'Sale not found' });
     }
     
-    const updatedSale = db.updateSale(id, sale);
+    const updatedSale = await db.updateSale(id, sale);
     
     res.status(200).json(updatedSale);
   } catch (error) {
@@ -85,31 +85,31 @@ export const updateSale = (req: Request, res: Response) => {
   }
 };
 
-export const deleteSale = (req: Request, res: Response) => {
+export const deleteSale = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     
     // Get sale before deletion to restore inventory
-    const sale = db.getSaleById(id);
+    const sale = await db.getSaleById(id);
     if (!sale) {
       return res.status(404).json({ message: 'Sale not found' });
     }
     
-    const deleted = db.deleteSale(id);
+    const deleted = await db.deleteSale(id);
     
     if (deleted) {
       // Restore inventory (add quantities back)
-      sale.items.forEach(item => {
-        const batches = db.getBatchesByProductCode(item.code);
+      for (const item of sale.items) {
+        const batches = await db.getBatchesByProductCode(item.code);
         if (batches.length > 0) {
           const batch = batches.find(b => b.batchNo === item.batch) || batches[0];
           if (batch) {
-            db.updateBatch(batch.id!, {
+            await db.updateBatch(batch.id!, {
               qty: batch.qty + item.qty
             });
           }
         }
-      });
+      }
       
       res.status(200).json({ message: 'Sale deleted successfully' });
     } else {

@@ -2,9 +2,9 @@
 import { Request, Response } from 'express';
 import * as db from '../services/database';
 
-export const getAllReceipts = (req: Request, res: Response) => {
+export const getAllReceipts = async (req: Request, res: Response) => {
   try {
-    const receipts = db.getAllReceipts();
+    const receipts = await db.getAllReceipts();
     res.status(200).json(receipts);
   } catch (error) {
     console.error('Error fetching receipts:', error);
@@ -12,10 +12,10 @@ export const getAllReceipts = (req: Request, res: Response) => {
   }
 };
 
-export const getReceiptById = (req: Request, res: Response) => {
+export const getReceiptById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const receipt = db.getReceiptById(id);
+    const receipt = await db.getReceiptById(id);
     
     if (!receipt) {
       return res.status(404).json({ message: 'Receipt not found' });
@@ -28,7 +28,7 @@ export const getReceiptById = (req: Request, res: Response) => {
   }
 };
 
-export const createReceipt = (req: Request, res: Response) => {
+export const createReceipt = async (req: Request, res: Response) => {
   try {
     const receipt = req.body;
     
@@ -44,7 +44,7 @@ export const createReceipt = (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Bills must be a non-empty array' });
     }
     
-    const newReceipt = db.createReceipt(receipt);
+    const newReceipt = await db.createReceipt(receipt);
     res.status(201).json(newReceipt);
   } catch (error) {
     console.error('Error creating receipt:', error);
@@ -52,12 +52,12 @@ export const createReceipt = (req: Request, res: Response) => {
   }
 };
 
-export const updateReceipt = (req: Request, res: Response) => {
+export const updateReceipt = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const receipt = req.body;
     
-    const updatedReceipt = db.updateReceipt(id, receipt);
+    const updatedReceipt = await db.updateReceipt(id, receipt);
     
     if (!updatedReceipt) {
       return res.status(404).json({ message: 'Receipt not found' });
@@ -70,10 +70,10 @@ export const updateReceipt = (req: Request, res: Response) => {
   }
 };
 
-export const deleteReceipt = (req: Request, res: Response) => {
+export const deleteReceipt = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const deleted = db.deleteReceipt(id);
+    const deleted = await db.deleteReceipt(id);
     
     if (!deleted) {
       return res.status(404).json({ message: 'Receipt not found' });

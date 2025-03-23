@@ -2,9 +2,9 @@
 import { Request, Response } from 'express';
 import * as db from '../services/database';
 
-export const getAllPurchases = (req: Request, res: Response) => {
+export const getAllPurchases = async (req: Request, res: Response) => {
   try {
-    const purchases = db.getAllPurchases();
+    const purchases = await db.getAllPurchases();
     res.status(200).json(purchases);
   } catch (error) {
     console.error('Error fetching purchases:', error);
@@ -12,10 +12,10 @@ export const getAllPurchases = (req: Request, res: Response) => {
   }
 };
 
-export const getPurchaseById = (req: Request, res: Response) => {
+export const getPurchaseById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const purchase = db.getPurchaseById(id);
+    const purchase = await db.getPurchaseById(id);
     
     if (!purchase) {
       return res.status(404).json({ message: 'Purchase not found' });
@@ -28,7 +28,7 @@ export const getPurchaseById = (req: Request, res: Response) => {
   }
 };
 
-export const createPurchase = (req: Request, res: Response) => {
+export const createPurchase = async (req: Request, res: Response) => {
   try {
     const purchase = req.body;
     
@@ -44,15 +44,15 @@ export const createPurchase = (req: Request, res: Response) => {
       }
     }
     
-    const newPurchase = db.createPurchase(purchase);
+    const newPurchase = await db.createPurchase(purchase);
     
     // Update inventory (add quantities)
-    purchase.items.forEach(item => {
+    for (const item of purchase.items) {
       // Check if product exists
-      const product = db.getProductByCode(item.code);
+      const product = await db.getProductByCode(item.code);
       if (!product) {
         // Create a new product if it doesn't exist
-        db.createProduct({
+        await db.createProduct({
           code: item.code,
           name: item.productName,
           packing: item.packing
@@ -60,19 +60,19 @@ export const createPurchase = (req: Request, res: Response) => {
       }
       
       // Check if batch exists
-      const batches = db.getBatchesByProductCode(item.code);
+      const batches = await db.getBatchesByProductCode(item.code);
       const existingBatch = batches.find(b => b.batchNo === item.batchNo);
       
       if (existingBatch) {
         // Update existing batch
-        db.updateBatch(existingBatch.id!, {
+        await db.updateBatch(existingBatch.id!, {
           qty: existingBatch.qty + item.qty,
           billPrice: item.rate,
           updatedAt: new Date()
         });
       } else {
         // Create new batch
-        db.createBatch({
+        await db.createBatch({
           productCode: item.code,
           batchNo: item.batchNo,
           billPrice: item.rate,
@@ -87,7 +87,7 @@ export const createPurchase = (req: Request, res: Response) => {
           supplier: purchase.supplier
         });
       }
-    });
+    }
     
     res.status(201).json(newPurchase);
   } catch (error) {
@@ -96,17 +96,17 @@ export const createPurchase = (req: Request, res: Response) => {
   }
 };
 
-export const updatePurchase = (req: Request, res: Response) => {
+export const updatePurchase = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const purchase = req.body;
     
-    const existingPurchase = db.getPurchaseById(id);
+    const existingPurchase = await db.getPurchaseById(id);
     if (!existingPurchase) {
       return res.status(404).json({ message: 'Purchase not found' });
     }
     
-    const updatedPurchase = db.updatePurchase(id, purchase);
+    const updatedPurchase = await db.updatePurchase(id, purchase);
     
     res.status(200).json(updatedPurchase);
   } catch (error) {
@@ -115,31 +115,31 @@ export const updatePurchase = (req: Request, res: Response) => {
   }
 };
 
-export const deletePurchase = (req: Request, res: Response) => {
+export const deletePurchase = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     
     // Get purchase before deletion to update inventory
-    const purchase = db.getPurchaseById(id);
+    const purchase = await db.getPurchaseById(id);
     if (!purchase) {
       return res.status(404).json({ message: 'Purchase not found' });
     }
     
-    const deleted = db.deletePurchase(id);
+    const deleted = await db.deletePurchase(id);
     
     if (deleted) {
       // Update inventory (subtract quantities)
-      purchase.items.forEach(item => {
-        const batches = db.getBatchesByProductCode(item.code);
+      for (const item of purchase.items) {
+        const batches = await db.getBatchesByProductCode(item.code);
         const batch = batches.find(b => b.batchNo === item.batchNo);
         
         if (batch) {
           // Reduce quantity
-          db.updateBatch(batch.id!, {
+          await db.updateBatch(batch.id!, {
             qty: Math.max(0, batch.qty - item.qty)
           });
         }
-      });
+      }
       
       res.status(200).json({ message: 'Purchase deleted successfully' });
     } else {

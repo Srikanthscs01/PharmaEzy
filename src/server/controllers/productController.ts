@@ -2,9 +2,9 @@
 import { Request, Response } from 'express';
 import * as db from '../services/database';
 
-export const getAllProducts = (req: Request, res: Response) => {
+export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = db.getAllProducts();
+    const products = await db.getAllProducts();
     res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -12,10 +12,10 @@ export const getAllProducts = (req: Request, res: Response) => {
   }
 };
 
-export const getProductById = (req: Request, res: Response) => {
+export const getProductById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const product = db.getProductById(id);
+    const product = await db.getProductById(id);
     
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
@@ -28,10 +28,10 @@ export const getProductById = (req: Request, res: Response) => {
   }
 };
 
-export const getProductByCode = (req: Request, res: Response) => {
+export const getProductByCode = async (req: Request, res: Response) => {
   try {
     const { code } = req.params;
-    const product = db.getProductByCode(code);
+    const product = await db.getProductByCode(code);
     
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
@@ -44,7 +44,7 @@ export const getProductByCode = (req: Request, res: Response) => {
   }
 };
 
-export const searchProducts = (req: Request, res: Response) => {
+export const searchProducts = async (req: Request, res: Response) => {
   try {
     const { query } = req.query;
     
@@ -52,7 +52,7 @@ export const searchProducts = (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Search query is required' });
     }
     
-    const products = db.searchProducts(query);
+    const products = await db.searchProducts(query);
     res.status(200).json(products);
   } catch (error) {
     console.error('Error searching products:', error);
@@ -60,7 +60,7 @@ export const searchProducts = (req: Request, res: Response) => {
   }
 };
 
-export const createProduct = (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response) => {
   try {
     const product = req.body;
     
@@ -70,12 +70,12 @@ export const createProduct = (req: Request, res: Response) => {
     }
     
     // Check if product with this code already exists
-    const existingProduct = db.getProductByCode(product.code);
+    const existingProduct = await db.getProductByCode(product.code);
     if (existingProduct) {
       return res.status(409).json({ message: 'Product with this code already exists' });
     }
     
-    const newProduct = db.createProduct(product);
+    const newProduct = await db.createProduct(product);
     res.status(201).json(newProduct);
   } catch (error) {
     console.error('Error creating product:', error);
@@ -83,12 +83,12 @@ export const createProduct = (req: Request, res: Response) => {
   }
 };
 
-export const updateProduct = (req: Request, res: Response) => {
+export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const product = req.body;
     
-    const updatedProduct = db.updateProduct(id, product);
+    const updatedProduct = await db.updateProduct(id, product);
     
     if (!updatedProduct) {
       return res.status(404).json({ message: 'Product not found' });
@@ -101,10 +101,10 @@ export const updateProduct = (req: Request, res: Response) => {
   }
 };
 
-export const deleteProduct = (req: Request, res: Response) => {
+export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const deleted = db.deleteProduct(id);
+    const deleted = await db.deleteProduct(id);
     
     if (!deleted) {
       return res.status(404).json({ message: 'Product not found' });

@@ -2,11 +2,15 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 import productRoutes from './routes/productRoutes';
 import batchRoutes from './routes/batchRoutes';
 import salesRoutes from './routes/salesRoutes';
 import purchaseRoutes from './routes/purchaseRoutes';
 import receiptRoutes from './routes/receiptRoutes';
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

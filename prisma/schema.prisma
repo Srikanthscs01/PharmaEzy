@@ -1,0 +1,232 @@
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  name      String
+  packing   String?
+  boxPack   String?
+  casePack  String?
+  printMark String?
+  hsn       String?
+  company   String?
+  rackNo    String?
+  mark      String?
+  sch       String?
+  aiodCode  String?
+  marketedBy String?
+  category  String?
+  saleQtyMin String?
+  max       String?
+  orderLevel String?
+  orderQty  String?
+  boxQtyRates String?
+  boxPurPrice String?
+  comment   String?
+  discontinued Boolean? @default(false)
+  purchaseQty String?
+  saleQty   String?
+  purchaseFree String?
+  saleFree  String?
+  drugFormula String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  batches   Batch[]
+}
+
+model Batch {
+  id        String   @id @default(uuid())
+  productCode String
+  batchNo   String
+  billPrice Float
+  mrp       Float
+  expiry    String
+  qty       Int
+  qit       Int
+  type      String?
+  purNo     String?
+  purDate   String?
+  rcvdDate  String?
+  from      String?
+  barCode   String?
+  purPrice  Float?
+  scheme    Float?
+  schemePct Float?
+  schAmt    Float?
+  disPct    Float?
+  addDisPct Float?
+  gstPct    Float?
+  specialPrice Float?
+  stockistPrice Float?
+  costPrice Float?
+  acPrice   Float?
+  retailerMarginPct Float?
+  marginPct Float?
+  invNo     String?
+  rNo       String?
+  freeQty   Int?
+  supplier  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product @relation(fields: [productCode], references: [code])
+
+  @@unique([productCode, batchNo])
+}
+
+model Sale {
+  id        String    @id @default(uuid())
+  customer  String
+  date      String
+  invoiceNo String
+  discount  Float?
+  productDiscount Float?
+  schemeDiscount Float?
+  margin    Float?
+  grossAmount Float
+  totalDiscount Float?
+  adjustment Float?
+  roundOff  Float?
+  netAmount Float
+  totalGST  Float?
+  paymentType String?
+  status    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  items     SaleItem[]
+}
+
+model SaleItem {
+  id        String    @id @default(uuid())
+  saleId    String
+  code      String
+  productName String
+  packing   String
+  batch     String
+  qty       Int
+  free      Int
+  discount  Float
+  rate      Float
+  value     Float
+  gstPercentage Float
+  gstAmount Float
+  sale      Sale      @relation(fields: [saleId], references: [id], onDelete: Cascade)
+}
+
+model Purchase {
+  id        String    @id @default(uuid())
+  supplier  String
+  remind    Boolean   @default(false)
+  invoiceNo String
+  holdStocks Boolean  @default(false)
+  company   String
+  lrNo      String
+  revCharge Boolean   @default(false)
+  entryNo   String
+  date      String
+  lrDate    String
+  entryDate String
+  dueDate   String
+  taxType   String
+  purchaseType String
+  grossAmount Float?
+  discount  Float?
+  gst       Float?
+  netAmount Float?
+  status    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  items     PurchaseItem[]
+}
+
+model PurchaseItem {
+  id        String    @id @default(uuid())
+  purchaseId String
+  code      String
+  productName String
+  packing   String
+  batchNo   String
+  rate      Float
+  qty       Int
+  free      Int
+  value     Float
+  month     String
+  year      String
+  marginPercentage Float
+  retailMarginPercentage Float
+  gstPercentage Float
+  discount  Float
+  gstAmount Float
+  purchase  Purchase  @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+}
+
+model Receipt {
+  id        String    @id @default(uuid())
+  customer  String
+  bankOrCash String
+  receiptNumber String
+  date      String
+  totalDueAmount Float
+  gross     Float?
+  discountAmount Float?
+  interestAmount Float?
+  adjustment Float?
+  netAmount Float?
+  status    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bills     BillItem[]
+  chequeDetails ChequeDetails?
+  draweeDetails DraweeDetails?
+}
+
+model BillItem {
+  id        String    @id @default(uuid())
+  receiptId String
+  billNo    String
+  billDate  String
+  billDisAmtAndPercent String
+  billAmount Float
+  dueAmount Float
+  nowReceived Float
+  discountAmount Float
+  adjustment Float
+  balance   Float
+  days      Int
+  interest  Float
+  receipt   Receipt   @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+}
+
+model ChequeDetails {
+  id        String    @id @default(uuid())
+  receiptId String    @unique
+  amount    Float
+  discountPercent Float
+  interestPercent Float
+  chequeNo  String
+  date      String
+  presentationDate String
+  type      String
+  note      String
+  receipt   Receipt   @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+}
+
+model DraweeDetails {
+  id        String    @id @default(uuid())
+  receiptId String    @unique
+  code      String
+  name      String
+  branch    String
+  city      String
+  receipt   Receipt   @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+}
