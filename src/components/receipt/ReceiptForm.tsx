@@ -2,7 +2,6 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { CalendarIcon } from 'lucide-react';
@@ -16,6 +15,9 @@ interface ReceiptFormProps {
   onBankOrCashChange: (value: string) => void;
   receiptNumber: string;
   onReceiptNumberChange: (value: string) => void;
+  date: Date;
+  onDateChange: (date: Date) => void;
+  totalDueAmount: number;
 }
 
 const ReceiptForm = ({
@@ -24,10 +26,11 @@ const ReceiptForm = ({
   bankOrCash,
   onBankOrCashChange,
   receiptNumber,
-  onReceiptNumberChange
+  onReceiptNumberChange,
+  date,
+  onDateChange,
+  totalDueAmount
 }: ReceiptFormProps) => {
-  const [date, setDate] = React.useState<Date>(new Date());
-
   return (
     <div className="bg-teal-700 text-white rounded-md p-4 shadow-md">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -86,7 +89,7 @@ const ReceiptForm = ({
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={(newDate) => newDate && setDate(newDate)}
+                  onSelect={(newDate) => newDate && onDateChange(newDate)}
                   initialFocus
                 />
               </PopoverContent>
@@ -99,7 +102,7 @@ const ReceiptForm = ({
       <div className="mt-6 flex justify-center">
         <div className="flex items-center gap-2">
           <Label htmlFor="totalDue" className="font-medium">Total Due Amt:</Label>
-          <span className="text-xl font-semibold">0.00</span>
+          <span className="text-xl font-semibold">{totalDueAmount.toFixed(2)}</span>
         </div>
       </div>
     </div>
