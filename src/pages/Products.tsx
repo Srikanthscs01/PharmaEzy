@@ -2,13 +2,11 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
-import { SidebarProvider } from '@/components/ui/sidebar';
 import AnimatedBackground from '@/components/AnimatedBackground';
-import ProductSidebar from '@/components/product/ProductSidebar';
-import ProductHeader from '@/components/product/ProductHeader';
 import ProductFooter from '@/components/product/ProductFooter';
 import ProductForm from '@/components/product/ProductForm';
 import { ProductFormValues } from '@/components/product/types';
+import Header from '@/components/layout/Header';
 
 const Products = () => {
   const { toast } = useToast();
@@ -95,39 +93,33 @@ const Products = () => {
   };
 
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex w-full">
-        <ProductSidebar />
-        
-        <div className="flex-1 flex flex-col">
-          <ProductHeader />
-          
-          <div className="relative flex-1">
-            <AnimatedBackground />
-            <main className="relative z-10 flex-1 py-6 px-4">
-              <div className="container max-w-6xl mx-auto animate-fade-in">
-                <div className="mb-6">
-                  <h1 className="text-2xl font-semibold text-primary">Product Master</h1>
-                  <p className="text-muted-foreground text-sm">Manage product information and inventory details</p>
-                </div>
-                
-                <ProductForm 
-                  form={form}
-                  isEditing={isEditing}
-                  onSubmit={onSubmit}
-                  onNew={handleNew}
-                  onEdit={handleEdit}
-                  onCancel={handleCancel}
-                  onSelectProduct={handleSelectProduct}
-                />
-              </div>
-            </main>
+    <div className="min-h-screen flex flex-col w-full">
+      <Header />
+      
+      <div className="relative flex-1">
+        <AnimatedBackground />
+        <main className="relative z-10 flex-1 py-6 px-4">
+          <div className="container max-w-6xl mx-auto animate-fade-in">
+            <div className="mb-6">
+              <h1 className="text-2xl font-semibold text-primary">Product Master</h1>
+              <p className="text-muted-foreground text-sm">Manage product information and inventory details</p>
+            </div>
+            
+            <ProductForm 
+              form={form}
+              isEditing={isEditing}
+              onSubmit={onSubmit}
+              onNew={handleNew}
+              onEdit={handleEdit}
+              onCancel={handleCancel}
+              onSelectProduct={handleSelectProduct}
+            />
           </div>
-          
-          <ProductFooter />
-        </div>
+        </main>
       </div>
-    </SidebarProvider>
+      
+      <ProductFooter />
+    </div>
   );
 };
 
