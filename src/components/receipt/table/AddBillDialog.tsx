@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Calendar } from 'lucide-react';
 import { BillItem } from '../types';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
@@ -21,7 +20,6 @@ const AddBillDialog = ({ onAddBill, children }: AddBillDialogProps) => {
   const [billDate, setBillDate] = useState<Date | undefined>(new Date());
   
   const [billItem, setBillItem] = useState<BillItem>({
-    receiptId: '',
     billNo: '',
     billDate: format(new Date(), 'yyyy-MM-dd'),
     billDisAmtAndPercent: '0%',
@@ -78,7 +76,6 @@ const AddBillDialog = ({ onAddBill, children }: AddBillDialogProps) => {
     
     // Reset form
     setBillItem({
-      receiptId: '',
       billNo: '',
       billDate: format(new Date(), 'yyyy-MM-dd'),
       billDisAmtAndPercent: '0%',
