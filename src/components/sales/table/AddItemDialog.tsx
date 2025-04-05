@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -9,9 +8,10 @@ import { useToast } from '@/components/ui/use-toast';
 
 interface AddItemDialogProps {
   onAddItem: (item: SalesItem) => void;
+  children: React.ReactNode;
 }
 
-const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
+const AddItemDialog = ({ onAddItem, children }: AddItemDialogProps) => {
   const { toast } = useToast();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [newItem, setNewItem] = useState<SalesItem>({
@@ -29,7 +29,6 @@ const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
   });
 
   const handleAddItem = () => {
-    // Calculate value and GST amount
     const itemValue = newItem.qty * newItem.rate;
     const netValue = itemValue - (itemValue * newItem.discount / 100);
     const gstAmount = netValue * (newItem.gstPercentage / 100);
@@ -43,7 +42,6 @@ const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
     onAddItem(completeItem);
     setShowAddDialog(false);
     
-    // Reset form for next item
     setNewItem({
       code: '',
       productName: '',
@@ -60,9 +58,7 @@ const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
   };
 
   const handleSearchProduct = () => {
-    // Simulate product search - in a real app, this would connect to your database
     if (newItem.code) {
-      // Simulate finding a product
       const dummyProduct = {
         code: newItem.code,
         productName: `Product ${newItem.code}`,
@@ -89,9 +85,7 @@ const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
   return (
     <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-1">
-          <Plus size={16} /> Add Item
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>

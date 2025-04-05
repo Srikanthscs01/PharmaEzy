@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,9 +15,10 @@ import { PurchaseItem } from '../types';
 
 interface AddItemDialogProps {
   onAddItem: (item: PurchaseItem) => void;
+  children: React.ReactNode;
 }
 
-const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
+const AddItemDialog = ({ onAddItem, children }: AddItemDialogProps) => {
   const [open, setOpen] = useState(false);
   const [itemData, setItemData] = useState<PurchaseItem>({
     code: '',
@@ -39,7 +39,6 @@ const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
   });
 
   const handleChange = (field: keyof PurchaseItem, value: any) => {
-    // Convert numeric strings to numbers where needed
     const processedValue = 
       ['rate', 'qty', 'free', 'marginPercentage', 'retailMarginPercentage', 'gstPercentage', 'discount'].includes(field) 
         ? Number(value) 
@@ -47,7 +46,6 @@ const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
         
     const updatedItem = { ...itemData, [field]: processedValue };
     
-    // Calculate value based on rate and quantity
     if (field === 'rate' || field === 'qty' || field === 'discount') {
       const discountAmount = (updatedItem.rate * updatedItem.qty * updatedItem.discount) / 100;
       updatedItem.value = updatedItem.rate * updatedItem.qty - discountAmount;
@@ -62,7 +60,6 @@ const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
     onAddItem(itemData);
     setOpen(false);
     
-    // Reset form
     setItemData({
       code: '',
       productName: '',
@@ -85,10 +82,7 @@ const AddItemDialog = ({ onAddItem }: AddItemDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="h-8">
-          <Plus size={16} className="mr-1" />
-          Add Item
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
