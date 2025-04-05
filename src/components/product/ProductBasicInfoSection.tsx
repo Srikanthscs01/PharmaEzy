@@ -42,18 +42,18 @@ const ProductBasicInfoSection = ({
   return (
     <>
       <div className="grid grid-cols-3 gap-6">
-        <div className="space-y-4">
+        <div className="space-y-2">
           <FormField
             control={form.control}
             name="code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-medium underline">Code:</FormLabel>
+                <FormLabel className="font-medium text-primary">Code:</FormLabel>
                 <FormControl>
                   <Input 
                     {...field} 
                     disabled={!isEditing} 
-                    className="input-field" 
+                    className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
                     onKeyDown={handleCodeKeyDown}
                   />
                 </FormControl>
@@ -62,38 +62,44 @@ const ProductBasicInfoSection = ({
           />
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-2">
           <FormField
             control={form.control}
             name="uniCode"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-medium underline">UniCode:</FormLabel>
+                <FormLabel className="font-medium text-primary">UniCode:</FormLabel>
                 <FormControl>
-                  <Input {...field} disabled={!isEditing} className="input-field" />
+                  <Input 
+                    {...field} 
+                    disabled={!isEditing} 
+                    className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+                  />
                 </FormControl>
               </FormItem>
             )}
           />
         </div>
         
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between space-x-4">
           <Button 
             type="button" 
-            variant="link" 
-            className="text-blue-600 hover:text-blue-800"
+            variant="outline" 
+            className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
             onClick={handleCheckOnline}
+            size="sm"
           >
-            Check Online (F8)
+            <Search size={16} className="mr-1" />
+            Check Online
           </Button>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 bg-cyan-50/50 dark:bg-cyan-900/20 p-2 rounded-md">
             <FormField
               control={form.control}
               name="discontinued"
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2">
-                  <FormLabel className="font-medium underline">Discontinued:</FormLabel>
+                  <FormLabel className="font-medium text-destructive m-0">Discontinued:</FormLabel>
                   <FormControl>
                     <Checkbox 
                       checked={field.value} 
@@ -114,9 +120,13 @@ const ProductBasicInfoSection = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-medium underline">Name:</FormLabel>
+              <FormLabel className="font-medium text-primary">Product Name:</FormLabel>
               <FormControl>
-                <Input {...field} disabled={!isEditing} className="input-field" />
+                <Input 
+                  {...field} 
+                  disabled={!isEditing} 
+                  className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary font-medium" 
+                />
               </FormControl>
             </FormItem>
           )}

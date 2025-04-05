@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Search, Save, Edit, X, Plus, Trash2 } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
 import ProductSearchDialog from './ProductSearchDialog';
 import { ProductFormValues } from './types';
 
@@ -29,14 +28,19 @@ const ProductActions = ({
         <Button 
           type="button" 
           variant="outline" 
-          className="bg-amber-100 hover:bg-amber-200 border-amber-200" 
+          className="bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-200" 
           onClick={() => setSearchDialogOpen(true)}
         >
           <Search size={16} className="mr-1" />
           Search
         </Button>
         
-        <Button type="button" variant="outline" className="bg-blue-100 hover:bg-blue-200 border-blue-200" onClick={onNew}>
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200" 
+          onClick={onNew}
+        >
           <Plus size={16} className="mr-1" />
           New
         </Button>
@@ -45,35 +49,63 @@ const ProductActions = ({
       <div className="flex gap-2">
         {isEditing ? (
           <>
-            <Button type="submit" variant="outline" className="bg-green-100 hover:bg-green-200 border-green-200">
+            <Button 
+              type="submit" 
+              variant="outline" 
+              className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+            >
               <Save size={16} className="mr-1" />
               Save
             </Button>
             
-            <Button type="button" variant="outline" className="bg-red-100 hover:bg-red-200 border-red-200" onClick={onCancel}>
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200" 
+              onClick={onCancel}
+            >
               <X size={16} className="mr-1" />
               Cancel
             </Button>
           </>
         ) : (
           <>
-            <Button type="button" variant="outline" className="bg-yellow-100 hover:bg-yellow-200 border-yellow-200" onClick={onEdit}>
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="bg-yellow-50 hover:bg-yellow-100 text-yellow-700 border-yellow-200" 
+              onClick={onEdit}
+            >
               <Edit size={16} className="mr-1" />
               Edit
             </Button>
             
-            <Button type="button" variant="outline" className="bg-red-100 hover:bg-red-200 border-red-200">
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+            >
               <Trash2 size={16} className="mr-1" />
               Delete
             </Button>
           </>
         )}
         
-        <Button type="button" variant="outline" onClick={() => console.log('A.Code clicked')}>
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200"
+          onClick={() => console.log('A.Code clicked')}
+        >
           A.Code
         </Button>
         
-        <Button type="button" variant="outline" onClick={() => console.log('Close clicked')}>
+        <Button 
+          type="button" 
+          variant="outline"
+          className="bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200" 
+          onClick={() => console.log('Close clicked')}
+        >
           Close
         </Button>
       </div>

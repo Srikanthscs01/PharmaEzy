@@ -23,9 +23,13 @@ const ProductPackingSection = ({ form, isEditing }: ProductPackingSectionProps) 
         name="packing"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="font-medium underline">Packing:</FormLabel>
+            <FormLabel className="font-medium text-primary">Packing:</FormLabel>
             <FormControl>
-              <Input {...field} disabled={!isEditing} className="input-field" />
+              <Input 
+                {...field} 
+                disabled={!isEditing} 
+                className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+              />
             </FormControl>
           </FormItem>
         )}
@@ -36,9 +40,13 @@ const ProductPackingSection = ({ form, isEditing }: ProductPackingSectionProps) 
         name="boxPack"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="font-medium underline">Box Pack:</FormLabel>
+            <FormLabel className="font-medium text-primary">Box Pack:</FormLabel>
             <FormControl>
-              <Input {...field} disabled={!isEditing} className="input-field" />
+              <Input 
+                {...field} 
+                disabled={!isEditing} 
+                className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+              />
             </FormControl>
           </FormItem>
         )}
@@ -49,9 +57,13 @@ const ProductPackingSection = ({ form, isEditing }: ProductPackingSectionProps) 
         name="casePack"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="font-medium underline">Case Pack:</FormLabel>
+            <FormLabel className="font-medium text-primary">Case Pack:</FormLabel>
             <FormControl>
-              <Input {...field} disabled={!isEditing} className="input-field" />
+              <Input 
+                {...field} 
+                disabled={!isEditing} 
+                className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+              />
             </FormControl>
           </FormItem>
         )}
@@ -62,9 +74,13 @@ const ProductPackingSection = ({ form, isEditing }: ProductPackingSectionProps) 
         name="printMark"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="font-medium underline">Print Mark:</FormLabel>
+            <FormLabel className="font-medium text-primary">Print Mark:</FormLabel>
             <FormControl>
-              <Input {...field} disabled={!isEditing} className="input-field" />
+              <Input 
+                {...field} 
+                disabled={!isEditing} 
+                className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+              />
             </FormControl>
           </FormItem>
         )}

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import ProductSidebar from '@/components/product/ProductSidebar';
@@ -82,10 +82,8 @@ const Products = () => {
   };
 
   const handleSelectProduct = (productData: Partial<ProductFormValues>) => {
-    // Enable editing when a product is selected
     setIsEditing(true);
     
-    // Update the form with the product data
     Object.entries(productData).forEach(([key, value]) => {
       form.setValue(key as keyof ProductFormValues, value);
     });
@@ -106,8 +104,13 @@ const Products = () => {
           
           <div className="relative flex-1">
             <AnimatedBackground />
-            <main className="relative z-10 flex-1 py-8 px-6">
-              <div className="container max-w-7xl mx-auto">
+            <main className="relative z-10 flex-1 py-6 px-4">
+              <div className="container max-w-6xl mx-auto animate-fade-in">
+                <div className="mb-6">
+                  <h1 className="text-2xl font-semibold text-primary">Product Master</h1>
+                  <p className="text-muted-foreground text-sm">Manage product information and inventory details</p>
+                </div>
+                
                 <ProductForm 
                   form={form}
                   isEditing={isEditing}
