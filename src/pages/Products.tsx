@@ -2,15 +2,19 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Search, Plus } from 'lucide-react';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import ProductFooter from '@/components/product/ProductFooter';
 import ProductForm from '@/components/product/ProductForm';
+import ProductSearchDialog from '@/components/product/ProductSearchDialog';
 import { ProductFormValues } from '@/components/product/types';
 import Header from '@/components/layout/Header';
 
 const Products = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   
   const form = useForm<ProductFormValues>({
     defaultValues: {
@@ -106,8 +110,30 @@ const Products = () => {
                   <h1 className="text-3xl font-bold text-slate-800 mb-2">Product Master</h1>
                   <p className="text-slate-600">Manage product information and inventory details with ease</p>
                 </div>
-                <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-                  <div className="text-white text-2xl font-bold">P</div>
+                <div className="flex items-center gap-4">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="h-11 px-6 bg-gradient-to-r from-amber-50 to-yellow-50 hover:from-amber-100 hover:to-yellow-100 text-amber-700 border-amber-200 font-medium shadow-sm" 
+                    onClick={() => setSearchDialogOpen(true)}
+                  >
+                    <Search size={18} className="mr-2" />
+                    Search Product
+                  </Button>
+                  
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="h-11 px-6 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 text-green-700 border-green-200 font-medium shadow-sm" 
+                    onClick={handleNew}
+                  >
+                    <Plus size={18} className="mr-2" />
+                    New Product
+                  </Button>
+                  
+                  <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                    <div className="text-white text-2xl font-bold">P</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -116,7 +142,6 @@ const Products = () => {
               form={form}
               isEditing={isEditing}
               onSubmit={onSubmit}
-              onNew={handleNew}
               onEdit={handleEdit}
               onCancel={handleCancel}
               onSelectProduct={handleSelectProduct}
@@ -124,6 +149,12 @@ const Products = () => {
           </div>
         </main>
       </div>
+      
+      <ProductSearchDialog 
+        open={searchDialogOpen} 
+        onOpenChange={setSearchDialogOpen}
+        onSelectProduct={handleSelectProduct}
+      />
       
       <ProductFooter />
     </div>

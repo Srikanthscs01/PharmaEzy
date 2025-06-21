@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
@@ -21,7 +20,6 @@ interface ProductFormProps {
   form: UseFormReturn<ProductFormValues>;
   isEditing: boolean;
   onSubmit: (data: ProductFormValues) => void;
-  onNew: () => void;
   onEdit: () => void;
   onCancel: () => void;
   onSelectProduct: (productData: Partial<ProductFormValues>) => void;
@@ -31,7 +29,6 @@ const ProductForm = ({
   form, 
   isEditing, 
   onSubmit, 
-  onNew, 
   onEdit, 
   onCancel,
   onSelectProduct
@@ -166,10 +163,8 @@ const ProductForm = ({
             <div className="border-t bg-slate-50/50 p-6">
               <ProductActions 
                 isEditing={isEditing} 
-                onNew={onNew} 
                 onEdit={onEdit} 
                 onCancel={onCancel}
-                onSelectProduct={onSelectProduct}
               />
             </div>
           </form>
