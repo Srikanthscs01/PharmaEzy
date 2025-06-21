@@ -10,8 +10,8 @@ router.get('/', batchController.getAllBatches);
 // GET batch by ID
 router.get('/:id', batchController.getBatchById);
 
-// GET batches by product code
-router.get('/product/:productCode', batchController.getBatchesByProductCode);
+// GET batches by product ID
+router.get('/product/:productId', batchController.getBatchesByProductId);
 
 // POST create new batch
 router.post('/', batchController.createBatch);

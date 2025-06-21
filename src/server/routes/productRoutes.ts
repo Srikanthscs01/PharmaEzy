@@ -10,8 +10,8 @@ router.get('/', productController.getAllProducts);
 // GET product by ID
 router.get('/id/:id', productController.getProductById);
 
-// GET product by code
-router.get('/code/:code', productController.getProductByCode);
+// GET product with batches by ID
+router.get('/id/:id/batches', productController.getProductWithBatches);
 
 // GET search products
 router.get('/search', productController.searchProducts);

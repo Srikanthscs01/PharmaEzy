@@ -15,7 +15,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 export const getProductById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const product = await db.getProductById(id);
+    const product = await db.getProductById(parseInt(id));
     
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
@@ -28,19 +28,24 @@ export const getProductById = async (req: Request, res: Response) => {
   }
 };
 
-export const getProductByCode = async (req: Request, res: Response) => {
+export const getProductWithBatches = async (req: Request, res: Response) => {
   try {
-    const { code } = req.params;
-    const product = await db.getProductByCode(code);
+    const { id } = req.params;
+    const product = await db.getProductById(parseInt(id));
     
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
     
-    res.status(200).json(product);
+    const batches = await db.getBatchesByProductId(parseInt(id));
+    
+    res.status(200).json({
+      product,
+      batches
+    });
   } catch (error) {
-    console.error('Error fetching product by code:', error);
-    res.status(500).json({ message: 'Failed to fetch product' });
+    console.error('Error fetching product with batches:', error);
+    res.status(500).json({ message: 'Failed to fetch product with batches' });
   }
 };
 
@@ -65,14 +70,8 @@ export const createProduct = async (req: Request, res: Response) => {
     const product = req.body;
     
     // Validate required fields
-    if (!product.code || !product.name) {
-      return res.status(400).json({ message: 'Product code and name are required' });
-    }
-    
-    // Check if product with this code already exists
-    const existingProduct = await db.getProductByCode(product.code);
-    if (existingProduct) {
-      return res.status(409).json({ message: 'Product with this code already exists' });
+    if (!product.Name) {
+      return res.status(400).json({ message: 'Product name is required' });
     }
     
     const newProduct = await db.createProduct(product);
@@ -88,7 +87,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
     const product = req.body;
     
-    const updatedProduct = await db.updateProduct(id, product);
+    const updatedProduct = await db.updateProduct(parseInt(id), product);
     
     if (!updatedProduct) {
       return res.status(404).json({ message: 'Product not found' });
@@ -104,7 +103,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const deleted = await db.deleteProduct(id);
+    const deleted = await db.deleteProduct(parseInt(id));
     
     if (!deleted) {
       return res.status(404).json({ message: 'Product not found' });

@@ -1,4 +1,3 @@
-
 import prisma from './prisma';
 import { Product } from '../models/Product';
 import { Batch } from '../models/Batch';
@@ -8,38 +7,98 @@ import { Receipt, BillItem, ChequeDetails, DraweeDetails } from '../models/Recei
 
 // Product Services
 export const getAllProducts = async (): Promise<Product[]> => {
-  return await prisma.product.findMany();
+  return await prisma.product.findMany({
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      packing: true,
+      marketedBy: true,
+      // Map database fields to new interface
+    }
+  }).then(products => products.map(p => ({
+    RndId: parseInt(p.id || '0'),
+    Name: p.name,
+    Packing: p.packing || '',
+    MarketedBy: p.marketedBy,
+    Mrp: undefined // This would need to come from batches or be added to product model
+  })));
 };
 
-export const getProductById = async (id: string): Promise<Product | null> => {
-  return await prisma.product.findUnique({
-    where: { id }
+export const getProductById = async (rndId: number): Promise<Product | null> => {
+  const product = await prisma.product.findUnique({
+    where: { id: rndId.toString() }
   });
+  
+  if (!product) return null;
+  
+  return {
+    RndId: parseInt(product.id || '0'),
+    Name: product.name,
+    Packing: product.packing || '',
+    MarketedBy: product.marketedBy,
+    Mrp: undefined
+  };
 };
 
 export const getProductByCode = async (code: string): Promise<Product | null> => {
-  return await prisma.product.findUnique({
+  const product = await prisma.product.findUnique({
     where: { code }
   });
+  
+  if (!product) return null;
+  
+  return {
+    RndId: parseInt(product.id || '0'),
+    Name: product.name,
+    Packing: product.packing || '',
+    MarketedBy: product.marketedBy,
+    Mrp: undefined
+  };
 };
 
-export const createProduct = async (product: Product): Promise<Product> => {
-  return await prisma.product.create({
-    data: product
+export const createProduct = async (product: Omit<Product, 'RndId'>): Promise<Product> => {
+  const created = await prisma.product.create({
+    data: {
+      name: product.Name,
+      packing: product.Packing,
+      marketedBy: product.MarketedBy,
+      code: `P${Date.now()}` // Generate a code if needed
+    }
   });
+  
+  return {
+    RndId: parseInt(created.id || '0'),
+    Name: created.name,
+    Packing: created.packing || '',
+    MarketedBy: created.marketedBy,
+    Mrp: product.Mrp
+  };
 };
 
-export const updateProduct = async (id: string, product: Partial<Product>): Promise<Product | null> => {
-  return await prisma.product.update({
-    where: { id },
-    data: product
+export const updateProduct = async (rndId: number, product: Partial<Product>): Promise<Product | null> => {
+  const updated = await prisma.product.update({
+    where: { id: rndId.toString() },
+    data: {
+      ...(product.Name && { name: product.Name }),
+      ...(product.Packing && { packing: product.Packing }),
+      ...(product.MarketedBy && { marketedBy: product.MarketedBy })
+    }
   });
+  
+  return {
+    RndId: parseInt(updated.id || '0'),
+    Name: updated.name,
+    Packing: updated.packing || '',
+    MarketedBy: updated.marketedBy,
+    Mrp: product.Mrp
+  };
 };
 
-export const deleteProduct = async (id: string): Promise<boolean> => {
+export const deleteProduct = async (rndId: number): Promise<boolean> => {
   try {
     await prisma.product.delete({
-      where: { id }
+      where: { id: rndId.toString() }
     });
     return true;
   } catch (error) {
@@ -48,7 +107,7 @@ export const deleteProduct = async (id: string): Promise<boolean> => {
 };
 
 export const searchProducts = async (query: string): Promise<Product[]> => {
-  return await prisma.product.findMany({
+  const products = await prisma.product.findMany({
     where: {
       OR: [
         { code: { contains: query } },
@@ -56,42 +115,144 @@ export const searchProducts = async (query: string): Promise<Product[]> => {
       ]
     }
   });
+  
+  return products.map(p => ({
+    RndId: parseInt(p.id || '0'),
+    Name: p.name,
+    Packing: p.packing || '',
+    MarketedBy: p.marketedBy,
+    Mrp: undefined
+  }));
 };
 
 // Batch Services
 export const getAllBatches = async (): Promise<Batch[]> => {
-  return await prisma.batch.findMany();
+  const batches = await prisma.batch.findMany();
+  
+  return batches.map(b => ({
+    RndId: parseInt(b.id || '0'),
+    BatchNo: b.batchNo,
+    PurDate: b.purDate || '',
+    ExpMonth: b.expiry?.split('/')[0] || '',
+    ExpYear: b.expiry?.split('/')[1] || '',
+    PurPrice: b.purPrice || 0,
+    CostPrice: b.costPrice || 0,
+    Mrp: b.mrp,
+    SupName: b.supplier || '',
+    Qty: b.qty,
+    SaleGst: b.gstPct
+  }));
 };
 
-export const getBatchById = async (id: string): Promise<Batch | null> => {
-  return await prisma.batch.findUnique({
-    where: { id }
+export const getBatchById = async (rndId: number): Promise<Batch | null> => {
+  const batch = await prisma.batch.findUnique({
+    where: { id: rndId.toString() }
   });
+  
+  if (!batch) return null;
+  
+  return {
+    RndId: parseInt(batch.id || '0'),
+    BatchNo: batch.batchNo,
+    PurDate: batch.purDate || '',
+    ExpMonth: batch.expiry?.split('/')[0] || '',
+    ExpYear: batch.expiry?.split('/')[1] || '',
+    PurPrice: batch.purPrice || 0,
+    CostPrice: batch.costPrice || 0,
+    Mrp: batch.mrp,
+    SupName: batch.supplier || '',
+    Qty: batch.qty,
+    SaleGst: batch.gstPct
+  };
 };
 
-export const getBatchesByProductCode = async (productCode: string): Promise<Batch[]> => {
-  return await prisma.batch.findMany({
-    where: { productCode }
+export const getBatchesByProductId = async (productRndId: number): Promise<Batch[]> => {
+  const batches = await prisma.batch.findMany({
+    where: { productCode: productRndId.toString() } // Assuming productCode links to product ID
   });
+  
+  return batches.map(b => ({
+    RndId: parseInt(b.id || '0'),
+    BatchNo: b.batchNo,
+    PurDate: b.purDate || '',
+    ExpMonth: b.expiry?.split('/')[0] || '',
+    ExpYear: b.expiry?.split('/')[1] || '',
+    PurPrice: b.purPrice || 0,
+    CostPrice: b.costPrice || 0,
+    Mrp: b.mrp,
+    SupName: b.supplier || '',
+    Qty: b.qty,
+    SaleGst: b.gstPct
+  }));
 };
 
-export const createBatch = async (batch: Batch): Promise<Batch> => {
-  return await prisma.batch.create({
-    data: batch
+export const createBatch = async (batch: Omit<Batch, 'RndId'>): Promise<Batch> => {
+  const created = await prisma.batch.create({
+    data: {
+      batchNo: batch.BatchNo,
+      purDate: batch.PurDate,
+      expiry: `${batch.ExpMonth}/${batch.ExpYear}`,
+      purPrice: batch.PurPrice,
+      costPrice: batch.CostPrice,
+      mrp: batch.Mrp,
+      supplier: batch.SupName,
+      qty: batch.Qty,
+      qit: batch.Qty, // Assuming qit equals qty initially
+      gstPct: batch.SaleGst,
+      productCode: '1' // This would need to be provided or calculated
+    }
   });
+  
+  return {
+    RndId: parseInt(created.id || '0'),
+    BatchNo: created.batchNo,
+    PurDate: created.purDate || '',
+    ExpMonth: created.expiry?.split('/')[0] || '',
+    ExpYear: created.expiry?.split('/')[1] || '',
+    PurPrice: created.purPrice || 0,
+    CostPrice: created.costPrice || 0,
+    Mrp: created.mrp,
+    SupName: created.supplier || '',
+    Qty: created.qty,
+    SaleGst: created.gstPct
+  };
 };
 
-export const updateBatch = async (id: string, batch: Partial<Batch>): Promise<Batch | null> => {
-  return await prisma.batch.update({
-    where: { id },
-    data: batch
+export const updateBatch = async (rndId: number, batch: Partial<Batch>): Promise<Batch | null> => {
+  const updated = await prisma.batch.update({
+    where: { id: rndId.toString() },
+    data: {
+      ...(batch.BatchNo && { batchNo: batch.BatchNo }),
+      ...(batch.PurDate && { purDate: batch.PurDate }),
+      ...(batch.ExpMonth && batch.ExpYear && { expiry: `${batch.ExpMonth}/${batch.ExpYear}` }),
+      ...(batch.PurPrice !== undefined && { purPrice: batch.PurPrice }),
+      ...(batch.CostPrice !== undefined && { costPrice: batch.CostPrice }),
+      ...(batch.Mrp !== undefined && { mrp: batch.Mrp }),
+      ...(batch.SupName && { supplier: batch.SupName }),
+      ...(batch.Qty !== undefined && { qty: batch.Qty }),
+      ...(batch.SaleGst !== undefined && { gstPct: batch.SaleGst })
+    }
   });
+  
+  return {
+    RndId: parseInt(updated.id || '0'),
+    BatchNo: updated.batchNo,
+    PurDate: updated.purDate || '',
+    ExpMonth: updated.expiry?.split('/')[0] || '',
+    ExpYear: updated.expiry?.split('/')[1] || '',
+    PurPrice: updated.purPrice || 0,
+    CostPrice: updated.costPrice || 0,
+    Mrp: updated.mrp,
+    SupName: updated.supplier || '',
+    Qty: updated.qty,
+    SaleGst: updated.gstPct
+  };
 };
 
-export const deleteBatch = async (id: string): Promise<boolean> => {
+export const deleteBatch = async (rndId: number): Promise<boolean> => {
   try {
     await prisma.batch.delete({
-      where: { id }
+      where: { id: rndId.toString() }
     });
     return true;
   } catch (error) {
