@@ -53,38 +53,36 @@ export const createPurchase = async (req: Request, res: Response) => {
       if (!product) {
         // Create a new product if it doesn't exist
         await db.createProduct({
-          code: item.code,
-          name: item.productName,
-          packing: item.packing
+          Name: item.productName,
+          Packing: item.packing || '',
+          MarketedBy: undefined,
+          Mrp: undefined
         });
       }
       
       // Check if batch exists
       const batches = await db.getBatchesByProductCode(item.code);
-      const existingBatch = batches.find(b => b.batchNo === item.batchNo);
+      const existingBatch = batches.find(b => b.BatchNo === item.batchNo);
       
       if (existingBatch) {
         // Update existing batch
-        await db.updateBatch(existingBatch.id!, {
-          qty: existingBatch.qty + item.qty,
-          billPrice: item.rate,
-          updatedAt: new Date()
+        await db.updateBatch(existingBatch.RndId, {
+          Qty: existingBatch.Qty + item.qty,
+          PurPrice: item.rate
         });
       } else {
         // Create new batch
         await db.createBatch({
-          productCode: item.code,
-          batchNo: item.batchNo,
-          billPrice: item.rate,
-          mrp: item.rate * 1.2, // Estimate MRP
-          expiry: `${item.month}/${item.year}`,
-          qty: item.qty,
-          qit: 0,
-          purNo: purchase.invoiceNo,
-          purDate: purchase.date,
-          rcvdDate: purchase.entryDate,
-          from: purchase.supplier,
-          supplier: purchase.supplier
+          BatchNo: item.batchNo,
+          PurPrice: item.rate,
+          Mrp: item.rate * 1.2, // Estimate MRP
+          ExpMonth: item.month,
+          ExpYear: item.year,
+          Qty: item.qty,
+          PurDate: purchase.date,
+          SupName: purchase.supplier,
+          CostPrice: item.rate,
+          SaleGst: item.gstPercentage
         });
       }
     }
@@ -131,12 +129,12 @@ export const deletePurchase = async (req: Request, res: Response) => {
       // Update inventory (subtract quantities)
       for (const item of purchase.items) {
         const batches = await db.getBatchesByProductCode(item.code);
-        const batch = batches.find(b => b.batchNo === item.batchNo);
+        const batch = batches.find(b => b.BatchNo === item.batchNo);
         
         if (batch) {
           // Reduce quantity
-          await db.updateBatch(batch.id!, {
-            qty: Math.max(0, batch.qty - item.qty)
+          await db.updateBatch(batch.RndId, {
+            Qty: Math.max(0, batch.Qty - item.qty)
           });
         }
       }

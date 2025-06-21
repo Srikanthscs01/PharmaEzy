@@ -1,3 +1,4 @@
+
 import prisma from './prisma';
 import { Product } from '../models/Product';
 import { Batch } from '../models/Batch';
@@ -14,14 +15,13 @@ export const getAllProducts = async (): Promise<Product[]> => {
       name: true,
       packing: true,
       marketedBy: true,
-      // Map database fields to new interface
     }
   }).then(products => products.map(p => ({
     RndId: parseInt(p.id || '0'),
     Name: p.name,
     Packing: p.packing || '',
     MarketedBy: p.marketedBy,
-    Mrp: undefined // This would need to come from batches or be added to product model
+    Mrp: undefined
   })));
 };
 
@@ -63,7 +63,7 @@ export const createProduct = async (product: Omit<Product, 'RndId'>): Promise<Pr
       name: product.Name,
       packing: product.Packing,
       marketedBy: product.MarketedBy,
-      code: `P${Date.now()}` // Generate a code if needed
+      code: `P${Date.now()}`
     }
   });
   
@@ -168,7 +168,27 @@ export const getBatchById = async (rndId: number): Promise<Batch | null> => {
 
 export const getBatchesByProductId = async (productRndId: number): Promise<Batch[]> => {
   const batches = await prisma.batch.findMany({
-    where: { productCode: productRndId.toString() } // Assuming productCode links to product ID
+    where: { productCode: productRndId.toString() }
+  });
+  
+  return batches.map(b => ({
+    RndId: parseInt(b.id || '0'),
+    BatchNo: b.batchNo,
+    PurDate: b.purDate || '',
+    ExpMonth: b.expiry?.split('/')[0] || '',
+    ExpYear: b.expiry?.split('/')[1] || '',
+    PurPrice: b.purPrice || 0,
+    CostPrice: b.costPrice || 0,
+    Mrp: b.mrp,
+    SupName: b.supplier || '',
+    Qty: b.qty,
+    SaleGst: b.gstPct
+  }));
+};
+
+export const getBatchesByProductCode = async (productCode: string): Promise<Batch[]> => {
+  const batches = await prisma.batch.findMany({
+    where: { productCode: productCode }
   });
   
   return batches.map(b => ({
@@ -197,9 +217,9 @@ export const createBatch = async (batch: Omit<Batch, 'RndId'>): Promise<Batch> =
       mrp: batch.Mrp,
       supplier: batch.SupName,
       qty: batch.Qty,
-      qit: batch.Qty, // Assuming qit equals qty initially
+      qit: batch.Qty,
       gstPct: batch.SaleGst,
-      productCode: '1' // This would need to be provided or calculated
+      productCode: '1'
     }
   });
   

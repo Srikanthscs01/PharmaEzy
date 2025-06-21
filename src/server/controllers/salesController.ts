@@ -50,10 +50,10 @@ export const createSale = async (req: Request, res: Response) => {
     for (const item of sale.items) {
       const batches = await db.getBatchesByProductCode(item.code);
       if (batches.length > 0) {
-        const batch = batches.find(b => b.batchNo === item.batch) || batches[0];
+        const batch = batches.find(b => b.BatchNo === item.batch) || batches[0];
         if (batch) {
-          await db.updateBatch(batch.id!, {
-            qty: Math.max(0, batch.qty - item.qty)
+          await db.updateBatch(batch.RndId, {
+            Qty: Math.max(0, batch.Qty - item.qty)
           });
         }
       }
@@ -102,10 +102,10 @@ export const deleteSale = async (req: Request, res: Response) => {
       for (const item of sale.items) {
         const batches = await db.getBatchesByProductCode(item.code);
         if (batches.length > 0) {
-          const batch = batches.find(b => b.batchNo === item.batch) || batches[0];
+          const batch = batches.find(b => b.BatchNo === item.batch) || batches[0];
           if (batch) {
-            await db.updateBatch(batch.id!, {
-              qty: batch.qty + item.qty
+            await db.updateBatch(batch.RndId, {
+              Qty: batch.Qty + item.qty
             });
           }
         }
