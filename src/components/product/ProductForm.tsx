@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Card, CardContent } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from './types';
 import ProductBasicInfoSection from './ProductBasicInfoSection';
@@ -47,85 +48,102 @@ const ProductForm = ({
             </div>
 
             <div className="p-8 space-y-8">
-              {/* Basic Information Card */}
-              <Card className="border border-blue-100 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded mr-3"></div>
-                    <h3 className="text-lg font-semibold text-slate-800">Basic Information</h3>
-                  </div>
-                  <ProductBasicInfoSection form={form} isEditing={isEditing} onSelectProduct={onSelectProduct} />
-                </CardContent>
-              </Card>
-              
-              {/* Packaging Information Card */}
-              <Card className="border border-green-100 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-2 h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded mr-3"></div>
-                    <h3 className="text-lg font-semibold text-slate-800">Packaging Details</h3>
-                  </div>
-                  <ProductPackingSection form={form} isEditing={isEditing} />
-                </CardContent>
-              </Card>
-              
-              {/* Company Information Card */}
-              <Card className="border border-orange-100 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-red-500 rounded mr-3"></div>
-                    <h3 className="text-lg font-semibold text-slate-800">Company & Classification</h3>
-                  </div>
-                  <ProductCompanySection form={form} isEditing={isEditing} />
-                </CardContent>
-              </Card>
-              
-              {/* Storage & Location Card */}
-              <Card className="border border-purple-100 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-2 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded mr-3"></div>
-                    <h3 className="text-lg font-semibold text-slate-800">Storage & Location</h3>
-                  </div>
-                  <ProductRackSection form={form} isEditing={isEditing} />
-                </CardContent>
-              </Card>
-              
-              {/* Marketing Information Card */}
-              <Card className="border border-cyan-100 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-2 h-8 bg-gradient-to-b from-cyan-500 to-blue-500 rounded mr-3"></div>
-                    <h3 className="text-lg font-semibold text-slate-800">Marketing Information</h3>
-                  </div>
-                  <ProductMarketingSection form={form} isEditing={isEditing} />
-                </CardContent>
-              </Card>
-              
-              {/* Inventory & Schemes Card */}
-              <Card className="border border-indigo-100 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-2 h-8 bg-gradient-to-b from-indigo-500 to-purple-500 rounded mr-3"></div>
-                    <h3 className="text-lg font-semibold text-slate-800">Inventory & Schemes</h3>
-                  </div>
-                  <div className="grid grid-cols-12 gap-8">
-                    <ProductInventorySection form={form} isEditing={isEditing} />
-                    <ProductSchemeSection form={form} isEditing={isEditing} />
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {/* Comments Card */}
-              <Card className="border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-2 h-8 bg-gradient-to-b from-slate-500 to-gray-500 rounded mr-3"></div>
-                    <h3 className="text-lg font-semibold text-slate-800">Additional Information</h3>
-                  </div>
-                  <ProductCommentSection form={form} isEditing={isEditing} />
-                </CardContent>
-              </Card>
+              {/* Collapsible Sections */}
+              <Accordion type="multiple" defaultValue={["basic", "packaging", "company", "storage", "marketing", "inventory", "comments"]} className="space-y-4">
+                {/* Basic Information */}
+                <AccordionItem value="basic" className="border border-blue-100 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded mr-3"></div>
+                      <h3 className="text-lg font-semibold text-slate-800">Basic Information</h3>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <ProductBasicInfoSection form={form} isEditing={isEditing} onSelectProduct={onSelectProduct} />
+                  </AccordionContent>
+                </AccordionItem>
+                
+                {/* Packaging Information */}
+                <AccordionItem value="packaging" className="border border-green-100 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <div className="w-2 h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded mr-3"></div>
+                      <h3 className="text-lg font-semibold text-slate-800">Packaging Details</h3>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <ProductPackingSection form={form} isEditing={isEditing} />
+                  </AccordionContent>
+                </AccordionItem>
+                
+                {/* Company Information */}
+                <AccordionItem value="company" className="border border-orange-100 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-red-500 rounded mr-3"></div>
+                      <h3 className="text-lg font-semibold text-slate-800">Company & Classification</h3>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <ProductCompanySection form={form} isEditing={isEditing} />
+                  </AccordionContent>
+                </AccordionItem>
+                
+                {/* Storage & Location */}
+                <AccordionItem value="storage" className="border border-purple-100 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <div className="w-2 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded mr-3"></div>
+                      <h3 className="text-lg font-semibold text-slate-800">Storage & Location</h3>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <ProductRackSection form={form} isEditing={isEditing} />
+                  </AccordionContent>
+                </AccordionItem>
+                
+                {/* Marketing Information */}
+                <AccordionItem value="marketing" className="border border-cyan-100 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <div className="w-2 h-8 bg-gradient-to-b from-cyan-500 to-blue-500 rounded mr-3"></div>
+                      <h3 className="text-lg font-semibold text-slate-800">Marketing Information</h3>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <ProductMarketingSection form={form} isEditing={isEditing} />
+                  </AccordionContent>
+                </AccordionItem>
+                
+                {/* Inventory & Schemes */}
+                <AccordionItem value="inventory" className="border border-indigo-100 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <div className="w-2 h-8 bg-gradient-to-b from-indigo-500 to-purple-500 rounded mr-3"></div>
+                      <h3 className="text-lg font-semibold text-slate-800">Inventory & Schemes</h3>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <div className="grid grid-cols-12 gap-8">
+                      <ProductInventorySection form={form} isEditing={isEditing} />
+                      <ProductSchemeSection form={form} isEditing={isEditing} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                
+                {/* Comments */}
+                <AccordionItem value="comments" className="border border-slate-100 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center">
+                      <div className="w-2 h-8 bg-gradient-to-b from-slate-500 to-gray-500 rounded mr-3"></div>
+                      <h3 className="text-lg font-semibold text-slate-800">Additional Information</h3>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <ProductCommentSection form={form} isEditing={isEditing} />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
               
               {/* Navigation & Metadata */}
               <div className="space-y-6">
