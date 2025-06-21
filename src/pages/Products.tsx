@@ -93,16 +93,23 @@ const Products = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col w-full">
+    <div className="min-h-screen flex flex-col w-full bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
       <Header />
       
       <div className="relative flex-1">
         <AnimatedBackground />
-        <main className="relative z-10 flex-1 py-6 px-4">
-          <div className="container max-w-6xl mx-auto animate-fade-in">
-            <div className="mb-6">
-              <h1 className="text-2xl font-semibold text-primary">Product Master</h1>
-              <p className="text-muted-foreground text-sm">Manage product information and inventory details</p>
+        <main className="relative z-10 flex-1 py-8 px-6">
+          <div className="container max-w-7xl mx-auto animate-fade-in">
+            <div className="mb-8">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold text-slate-800 mb-2">Product Master</h1>
+                  <p className="text-slate-600">Manage product information and inventory details with ease</p>
+                </div>
+                <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                  <div className="text-white text-2xl font-bold">P</div>
+                </div>
+              </div>
             </div>
             
             <ProductForm 

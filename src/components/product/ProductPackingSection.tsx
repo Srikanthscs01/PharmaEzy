@@ -17,18 +17,19 @@ interface ProductPackingSectionProps {
 
 const ProductPackingSection = ({ form, isEditing }: ProductPackingSectionProps) => {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <FormField
         control={form.control}
         name="packing"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="font-medium text-primary">Packing:</FormLabel>
+            <FormLabel className="text-sm font-semibold text-slate-700">Packing</FormLabel>
             <FormControl>
               <Input 
                 {...field} 
                 disabled={!isEditing} 
-                className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+                className="h-11 border-slate-200 focus:border-green-500 focus:ring-green-500/20 transition-all" 
+                placeholder="Pack size"
               />
             </FormControl>
           </FormItem>
@@ -40,12 +41,13 @@ const ProductPackingSection = ({ form, isEditing }: ProductPackingSectionProps) 
         name="boxPack"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="font-medium text-primary">Box Pack:</FormLabel>
+            <FormLabel className="text-sm font-semibold text-slate-700">Box Pack</FormLabel>
             <FormControl>
               <Input 
                 {...field} 
                 disabled={!isEditing} 
-                className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+                className="h-11 border-slate-200 focus:border-green-500 focus:ring-green-500/20 transition-all" 
+                placeholder="Box quantity"
               />
             </FormControl>
           </FormItem>
@@ -57,12 +59,13 @@ const ProductPackingSection = ({ form, isEditing }: ProductPackingSectionProps) 
         name="casePack"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="font-medium text-primary">Case Pack:</FormLabel>
+            <FormLabel className="text-sm font-semibold text-slate-700">Case Pack</FormLabel>
             <FormControl>
               <Input 
                 {...field} 
                 disabled={!isEditing} 
-                className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+                className="h-11 border-slate-200 focus:border-green-500 focus:ring-green-500/20 transition-all" 
+                placeholder="Case quantity"
               />
             </FormControl>
           </FormItem>
@@ -74,12 +77,13 @@ const ProductPackingSection = ({ form, isEditing }: ProductPackingSectionProps) 
         name="printMark"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="font-medium text-primary">Print Mark:</FormLabel>
+            <FormLabel className="text-sm font-semibold text-slate-700">Print Mark</FormLabel>
             <FormControl>
               <Input 
                 {...field} 
                 disabled={!isEditing} 
-                className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+                className="h-11 border-slate-200 focus:border-green-500 focus:ring-green-500/20 transition-all" 
+                placeholder="Print marking"
               />
             </FormControl>
           </FormItem>

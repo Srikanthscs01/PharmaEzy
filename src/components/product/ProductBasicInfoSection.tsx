@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { 
   FormField,
   FormItem,
@@ -11,7 +12,7 @@ import {
 } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from './types';
-import { Search } from 'lucide-react';
+import { Search, AlertTriangle } from 'lucide-react';
 import ProductSearchDialog from './ProductSearchDialog';
 
 interface ProductBasicInfoSectionProps {
@@ -41,20 +42,25 @@ const ProductBasicInfoSection = ({
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-6">
-        <div className="space-y-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Product Code Section */}
+        <div className="space-y-4">
           <FormField
             control={form.control}
             name="code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-medium text-primary">Code:</FormLabel>
+                <FormLabel className="text-sm font-semibold text-slate-700 flex items-center">
+                  Product Code
+                  <Badge variant="secondary" className="ml-2 text-xs">Required</Badge>
+                </FormLabel>
                 <FormControl>
                   <Input 
                     {...field} 
                     disabled={!isEditing} 
-                    className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+                    className="h-11 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 transition-all" 
                     onKeyDown={handleCodeKeyDown}
+                    placeholder="Enter product code"
                   />
                 </FormControl>
               </FormItem>
@@ -62,18 +68,20 @@ const ProductBasicInfoSection = ({
           />
         </div>
         
-        <div className="space-y-2">
+        {/* UniCode Section */}
+        <div className="space-y-4">
           <FormField
             control={form.control}
             name="uniCode"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-medium text-primary">UniCode:</FormLabel>
+                <FormLabel className="text-sm font-semibold text-slate-700">UniCode</FormLabel>
                 <FormControl>
                   <Input 
                     {...field} 
                     disabled={!isEditing} 
-                    className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary" 
+                    className="h-11 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 transition-all" 
+                    placeholder="Enter unique code"
                   />
                 </FormControl>
               </FormItem>
@@ -81,32 +89,37 @@ const ProductBasicInfoSection = ({
           />
         </div>
         
-        <div className="flex items-center justify-between space-x-4">
+        {/* Action Buttons & Status */}
+        <div className="flex flex-col justify-between space-y-4">
           <Button 
             type="button" 
             variant="outline" 
-            className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+            className="h-11 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 border-blue-200 text-blue-700 font-medium"
             onClick={handleCheckOnline}
-            size="sm"
+            size="default"
           >
-            <Search size={16} className="mr-1" />
+            <Search size={16} className="mr-2" />
             Check Online
           </Button>
           
-          <div className="flex items-center space-x-2 bg-cyan-50/50 dark:bg-cyan-900/20 p-2 rounded-md">
+          <div className="flex items-center space-x-3 bg-red-50 p-3 rounded-lg border border-red-100">
             <FormField
               control={form.control}
               name="discontinued"
               render={({ field }) => (
-                <FormItem className="flex items-center space-x-2">
-                  <FormLabel className="font-medium text-destructive m-0">Discontinued:</FormLabel>
+                <FormItem className="flex items-center space-x-2 m-0">
                   <FormControl>
                     <Checkbox 
                       checked={field.value} 
                       onCheckedChange={field.onChange} 
                       disabled={!isEditing}
+                      className="data-[state=checked]:bg-red-500 data-[state=checked]:border-red-500"
                     />
                   </FormControl>
+                  <FormLabel className="text-sm font-medium text-red-700 m-0 flex items-center">
+                    <AlertTriangle size={14} className="mr-1" />
+                    Discontinued
+                  </FormLabel>
                 </FormItem>
               )}
             />
@@ -114,18 +127,23 @@ const ProductBasicInfoSection = ({
         </div>
       </div>
       
-      <div>
+      {/* Product Name - Full Width */}
+      <div className="mt-6">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-medium text-primary">Product Name:</FormLabel>
+              <FormLabel className="text-sm font-semibold text-slate-700 flex items-center">
+                Product Name
+                <Badge variant="secondary" className="ml-2 text-xs">Required</Badge>
+              </FormLabel>
               <FormControl>
                 <Input 
                   {...field} 
                   disabled={!isEditing} 
-                  className="bg-cyan-50/50 dark:bg-cyan-900/20 focus:border-primary font-medium" 
+                  className="h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20 transition-all text-lg font-medium" 
+                  placeholder="Enter complete product name"
                 />
               </FormControl>
             </FormItem>
